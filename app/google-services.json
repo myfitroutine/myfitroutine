@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1065618613518",
+    "project_id": "myfitroutine-2f0c3",
+    "storage_bucket": "myfitroutine-2f0c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065618613518:android:db3119c7eeb00b52f3e35f",
+        "android_client_info": {
+          "package_name": "com.bestteam.myfitroutine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZVRN3g_C1YAp2yDo8vrB0TOspH5DHzK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
