@@ -1,13 +1,14 @@
 package com.bestteam.myfitroutine.Model
 
-import java.sql.Timestamp
+import com.google.firebase.Timestamp
+
 
 data class WeightData(
     val uid:String,
-    val weight:Int,
-    val date:Timestamp
+    val weight: Int,
+    val date: Timestamp
 ){
     constructor() : this(
-        "", 0, Timestamp.valueOf(null)
+        "", 0, Timestamp.now()
     )
 }
