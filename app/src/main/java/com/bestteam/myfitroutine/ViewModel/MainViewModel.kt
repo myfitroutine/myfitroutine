@@ -1,11 +1,13 @@
 package com.bestteam.myfitroutine.ViewModel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestteam.myfitroutine.Model.WeightData
 import com.bestteam.myfitroutine.Repository.MainRepository
-import com.google.firebase.Timestamp
+import com.bestteam.myfitroutine.Repository.MainRepositoryImpl
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,18 +16,11 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository : MainRepository) : ViewModel() {
 
-    constructor() : this(MainRepository(FirebaseFirestore.getInstance())) {
-    }
+    constructor() : this(MainRepositoryImpl(FirebaseFirestore.getInstance()))
 
+    private val _todayWeight = MutableStateFlow<Int?>(null)
+    val todayWeight : StateFlow<Int?> get() = _todayWeight
 
-    private val _todayWeight = MutableStateFlow<String?>(null)
-    val todayWeight : StateFlow<String?> get() = _todayWeight
-
-
-    fun setTodayWeight(weight: Int) {
-        _todayWeight.value = weight.toString()
-        Log.d("nyh", "Viewmodel setTodayWeight: $weight")
-    }
 
     fun addWeight(weight: WeightData){
         viewModelScope.launch {
@@ -39,9 +34,12 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
         }
     }
 
-    fun getTodayWeight(id: Timestamp) {
+    fun getTodayWeight() {
         viewModelScope.launch {
-            val weight = repository.getTodayWeight(id)
+            repository.getTodayWeight()?.let {
+                _todayWeight.value = it.weight
+            }
+            Log.d("nyh", "getTodayWeight Viewmodel : _value = ${_todayWeight.value} , value = ${todayWeight.value}")
         }
     }
 //    fun updateWeight(weight: WeightData) {
