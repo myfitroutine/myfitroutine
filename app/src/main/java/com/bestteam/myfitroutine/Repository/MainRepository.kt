@@ -16,9 +16,9 @@ interface MainRepository {
     suspend fun addWeight(weight: WeightData)
     suspend fun getAllWeight(): List<WeightData>
     suspend fun getTodayWeight(): WeightData?
-    suspend fun updateWeight(entity: WeightData)
-    suspend fun deleteWeight(id: String)
+    suspend fun getYesterdayWeight(): WeightData?
     suspend fun getCurrentDate(): String
+    suspend fun getYesterdayDate(): String
 }
 class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
 
@@ -31,15 +31,19 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         return currentDate.format(dateFormat)
     }
 
-    override suspend fun addWeight(weight: WeightData) {
-        val dateString = weight.date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val date = dateFormat.parse(dateString)
-        val yearMonthDay = dateFormat.format(date)
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getYesterdayDate(): String {
+        val yesterday = LocalDate.now().minusDays(1)
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+        return yesterday.format(dateFormat)
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun addWeight(weight: WeightData) {
+        val today = getCurrentDate()
 
         // Document ID를 현재 년, 월, 일로 설정하여 추가
-        collection.document(yearMonthDay).set(weight).await()
+        collection.document(today).set(weight).await()
     }
 
     override suspend fun getAllWeight(): List<WeightData> {
@@ -55,14 +59,11 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
 
         return document.toObject(WeightData::class.java)
     }
-//    suspend fun getYesterdayWeight(id: Timestamp): WeightData?{
-//        val document = collection.document(id.toString()-1).get().await()
-//        return document.toObject((WeightData::class.java))
-//    }
-    override suspend fun updateWeight(weight: WeightData) {
-        collection.document((weight.date).toString()).set(weight).await()
-    }
-    override suspend fun deleteWeight(id: String) {
-        collection.document(id).delete().await()
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getYesterdayWeight(): WeightData?{
+        val yesterday = getYesterdayDate()
+        val document = collection.document(yesterday).get().await()
+        Log.d("nyh", "getYesterdayWeight repo: $yesterday")
+        return document.toObject((WeightData::class.java))
     }
 }

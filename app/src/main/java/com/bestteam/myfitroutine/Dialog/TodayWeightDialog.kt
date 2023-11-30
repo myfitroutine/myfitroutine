@@ -62,9 +62,6 @@ class TodayWeightDialog : DialogFragment() {
     }
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        // Dialog가 닫힐 때 Fragment를 갱신하는 작업을 수행합니다.
-        // 예를 들어, Fragment 내부에서 데이터를 다시 로드하거나 업데이트할 수 있습니다.
-        // 아래는 간단한 예시입니다.
         (parentFragment as? MainFragment)?.onResume()
     }
 }

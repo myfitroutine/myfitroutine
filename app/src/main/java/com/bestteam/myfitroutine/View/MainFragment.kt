@@ -41,7 +41,20 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
         val todayWeight = binding.txtTodayWeight
+        val yesterdayWeight = binding.txtYesterWeight
+        val chagnedWeight = binding.txtChangeWeight
+        val chagnedTxt = binding.txtChagneTxt
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getYesterdayWeight()
+            weightViewModel.yesterdayWeight.collect { yesterday ->
+                withContext(Dispatchers.Main){
+                    yesterdayWeight.text = (yesterday ?: "없어요").toString()
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getTodayWeight()
@@ -52,6 +65,8 @@ class MainFragment : Fragment() {
                 }
             }
         }
+
+
         binding.btnTodayWeight.setOnClickListener {
             val todayWeightDialog = TodayWeightDialog()
             todayWeightDialog.show(childFragmentManager, "TodayWeight")
@@ -74,5 +89,4 @@ class MainFragment : Fragment() {
             }
         }
     }
-
 }

@@ -21,6 +21,9 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
     private val _todayWeight = MutableStateFlow<Int?>(null)
     val todayWeight : StateFlow<Int?> get() = _todayWeight
 
+    private val _yesterdayWeight = MutableStateFlow<Int?>(null)
+    val yesterdayWeight : StateFlow<Int?> get() = _yesterdayWeight
+
 
     fun addWeight(weight: WeightData){
         viewModelScope.launch {
@@ -39,13 +42,16 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             repository.getTodayWeight()?.let {
                 _todayWeight.value = it.weight
             }
-            Log.d("nyh", "getTodayWeight Viewmodel : _value = ${_todayWeight.value} , value = ${todayWeight.value}")
+            Log.d("nyh", "getTodayWeight Viewmodel : value = ${_todayWeight.value}")
         }
     }
-//    fun updateWeight(weight: WeightData) {
-//        viewModelScope.launch {
-//            repository.updateWeight(weight)
-//        }
-//    }
 
+    fun getYesterdayWeight(){
+        viewModelScope.launch {
+            repository.getYesterdayWeight()?.let {
+                _yesterdayWeight.value = it.weight
+            }
+            Log.d("nyh", "getgetYesterdayDate Viewmodel : value = ${_yesterdayWeight.value}")
+        }
+    }
 }
