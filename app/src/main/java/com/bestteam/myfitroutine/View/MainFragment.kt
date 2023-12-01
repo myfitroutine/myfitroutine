@@ -23,6 +23,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@Suppress("UNREACHABLE_CODE")
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
@@ -41,17 +42,29 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
         val todayWeight = binding.txtTodayWeight
+        val yesterdayWeight = binding.txtYesterWeight
+        val chagnedWeight = binding.txtChangeWeight
+        val chagnedTxt = binding.txtChagneTxt
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getYesterdayWeight()
+            weightViewModel.yesterdayWeight.collect { yesterday ->
+                yesterdayWeight.text = (yesterday ?: "없어요").toString()
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getTodayWeight()
             weightViewModel.todayWeight.collect { newWeight ->
-                withContext(Dispatchers.Main) {
-                    Log.d("nyh main", "onViewCreated: $newWeight")
-                    todayWeight.text = (newWeight ?: "없어요").toString()
-                }
+                Log.d("nyh main", "onViewCreated: $newWeight")
+                todayWeight.text = (newWeight ?: "없어요").toString()
             }
         }
+
+
+
         binding.btnTodayWeight.setOnClickListener {
             val todayWeightDialog = TodayWeightDialog()
             todayWeightDialog.show(childFragmentManager, "TodayWeight")
@@ -63,16 +76,47 @@ class MainFragment : Fragment() {
 
         weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val todayWeight = binding.txtTodayWeight
+        var weightGap = binding.txtChangeWeight
+        var weightGapTxt = binding.txtChagneTxt
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getTodayWeight()
             weightViewModel.todayWeight.collect { newWeight ->
-                withContext(Dispatchers.Main) {
-                    Log.d("nyh main", "onViewCreated: $newWeight")
-                    todayWeight.text = (newWeight ?: "없어요").toString()
-                }
+                Log.d("nyh main", "onViewCreated: $newWeight")
+                todayWeight.text = (newWeight ?: "없어요").toString()
             }
         }
-    }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getWeightGap()
+            weightViewModel.weightGap.collect { getWeightGap ->
+
+                val weightStatus = when {
+                    getWeightGap != null && getWeightGap < 0 -> {
+                        weightGapTxt.text = "감량"
+                        weightGap.text = getWeightGap.toString()
+                    }
+
+                    getWeightGap != null && getWeightGap == 0 -> {
+                        weightGapTxt.text = "같음"
+                        weightGap.text = getWeightGap.toString()
+                    }
+
+                    getWeightGap != null && getWeightGap > 0 -> {
+                        weightGapTxt.text = "증량"
+                        weightGap.text = getWeightGap.toString()
+                    }
+
+                    else -> {
+                        weightGapTxt.text = "가 없어요"
+                        weightGap.text = "비교"
+                    }
+                }
+                Log.d("nyh main", "onresume getWeightGap = : $getWeightGap")
+                weightGap.text = (getWeightGap ?: "없어요").toString()
+            }
+
+        }
+
+    }
 }
