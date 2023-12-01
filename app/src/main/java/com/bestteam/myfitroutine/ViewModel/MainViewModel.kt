@@ -24,6 +24,9 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
     private val _yesterdayWeight = MutableStateFlow<Int?>(null)
     val yesterdayWeight : StateFlow<Int?> get() = _yesterdayWeight
 
+    private val _getWeightGap = MutableStateFlow<Int?>(null)
+    val weightGap : StateFlow<Int?> get() = _getWeightGap
+
 
     fun addWeight(weight: WeightData){
         viewModelScope.launch {
@@ -54,4 +57,13 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             Log.d("nyh", "getgetYesterdayDate Viewmodel : value = ${_yesterdayWeight.value}")
         }
     }
+    fun getWeightGap() {
+        viewModelScope.launch {
+            repository.getWeightGap()?.let {
+                _getWeightGap.value = it.weight
+                Log.d("nyh", "getWeightGap viewModel: ${it.weight}")
+            }
+        }
+    }
+
 }
