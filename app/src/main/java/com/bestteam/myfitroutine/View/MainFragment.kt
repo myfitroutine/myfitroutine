@@ -23,7 +23,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-@Suppress("UNREACHABLE_CODE")
+@Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
@@ -45,8 +45,6 @@ class MainFragment : Fragment() {
 
         val todayWeight = binding.txtTodayWeight
         val yesterdayWeight = binding.txtYesterWeight
-        val chagnedWeight = binding.txtChangeWeight
-        val chagnedTxt = binding.txtChagneTxt
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getYesterdayWeight()
@@ -63,11 +61,16 @@ class MainFragment : Fragment() {
             }
         }
 
-
-
         binding.btnTodayWeight.setOnClickListener {
             val todayWeightDialog = TodayWeightDialog()
             todayWeightDialog.show(childFragmentManager, "TodayWeight")
+        }
+        binding.btnGraph.setOnClickListener {
+            val graphFragment = GraphFragment()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragmentFrame, graphFragment)
+            transaction?.addToBackStack(null)
+            transaction?.commit()
         }
     }
 
@@ -91,7 +94,7 @@ class MainFragment : Fragment() {
             weightViewModel.getWeightGap()
             weightViewModel.weightGap.collect { getWeightGap ->
 
-                val weightStatus = when {
+                when {
                     getWeightGap != null && getWeightGap < 0 -> {
                         weightGapTxt.text = "감량"
                         weightGap.text = getWeightGap.toString()

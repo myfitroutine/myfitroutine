@@ -33,12 +33,7 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             repository.addWeight(weight)
         }
     }
-    fun getAllWeight() {
-        viewModelScope.launch {
-            val weights = repository.getAllWeight()
-            Log.d("nyh", "getAllWeight: $weights")
-        }
-    }
+
 
     fun getTodayWeight() {
         viewModelScope.launch {
