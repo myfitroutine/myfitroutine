@@ -75,7 +75,7 @@ class GraphFragment : Fragment() {
 
             // 체중의 최대값을 가져와서 Y축의 최대값으로 설정
             val maxWeight = viewModel.weights.value?.maxByOrNull { it.weight }?.weight ?: 50f
-            axisLeft.axisMaximum = maxWeight as Float + 100f // 조절 가능한 값으로 설정해보세요.
+            axisLeft.axisMaximum = maxWeight as Float + 100f
 
             legend.apply {
                 textSize = 25f
@@ -87,27 +87,6 @@ class GraphFragment : Fragment() {
         }
 
     }
-
-//    private fun setupLineChart() {
-//
-//        lineChart.apply {
-//            setDrawGridBackground(false)
-//            description.isEnabled = false
-//            setTouchEnabled(true)
-//            isDragEnabled = true
-//            setScaleEnabled(true)
-//            axisRight.isEnabled = false
-//
-//            val xAxis: XAxis = getXAxis()
-//
-//            xAxis.apply {
-//                position = XAxis.XAxisPosition.BOTTOM
-//                setDrawGridLines(false)
-//                labelRotationAngle = -45f
-//                valueFormatter = DateValueFormatter()
-//            }
-//        }
-//    }
 
     private fun updateChart(weights: List<WeightData>) {
         val entries = mutableListOf<com.github.mikephil.charting.data.Entry>()
