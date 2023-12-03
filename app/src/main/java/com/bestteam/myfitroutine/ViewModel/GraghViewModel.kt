@@ -22,7 +22,8 @@ class GraphViewModel (private val repository : MainRepository):ViewModel(){
     fun getAllWeight() {
         viewModelScope.launch {
             val weights = repository.getAllWeight()
-            Log.d("nyh", "getAllWeight: $weights")
+            _weights.value = weights
+            Log.d("nyh", "view model getAllWeight: $weights")
 
         }
     }

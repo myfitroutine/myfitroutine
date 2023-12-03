@@ -1,6 +1,7 @@
 package com.bestteam.myfitroutine.View
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +57,7 @@ class GraphFragment : Fragment() {
     }
 
     private fun setUpChart() {
+        viewModel = ViewModelProvider(this).get(GraphViewModel::class.java)
         val xAxis = lineChart.xAxis
 
         xAxis.apply {
@@ -67,9 +69,14 @@ class GraphFragment : Fragment() {
             axisMinimum = 1f
             isGranularityEnabled = true
         }
+
         lineChart.apply {
             axisRight.isEnabled = false
-            axisLeft.axisMaximum = 50f
+
+            // 체중의 최대값을 가져와서 Y축의 최대값으로 설정
+            val maxWeight = viewModel.weights.value?.maxByOrNull { it.weight }?.weight ?: 50f
+            axisLeft.axisMaximum = maxWeight as Float + 100f // 조절 가능한 값으로 설정해보세요.
+
             legend.apply {
                 textSize = 25f
                 verticalAlignment = Legend.LegendVerticalAlignment.TOP
@@ -104,6 +111,7 @@ class GraphFragment : Fragment() {
 
     private fun updateChart(weights: List<WeightData>) {
         val entries = mutableListOf<com.github.mikephil.charting.data.Entry>()
+        Log.d("nyh", "updateChart: $weights")
 
         weights.forEachIndexed { index, weightData ->
             entries.add(
@@ -120,15 +128,23 @@ class GraphFragment : Fragment() {
         }
 
         val lineData = LineData(dataSet)
+        val xAxis = lineChart.xAxis
+        xAxis.valueFormatter = DateValueFormatter(weights.map { it.date })
+
         lineChart.data = lineData
         lineChart.invalidate()
     }
 
-    private class DateValueFormatter : ValueFormatter() {
-        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
+    private class DateValueFormatter(private val dates: List<String>) : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return dateFormat.format(Date(value.toLong()))
+            val index = value.toInt()
+            val label = if (index >= 0 && index < dates.size) {
+                dates[index]
+            } else {
+                ""
+            }
+            Log.d("nyh", "getAxisLabel: $label")
+            return label
         }
     }
 }
