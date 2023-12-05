@@ -100,9 +100,9 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    private fun isValidPassword(password: String): Boolean {
-        val pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,}\$".toRegex()
-        return pattern.matches(password)
+    private fun isValidPassword(pw: String): Boolean {
+            return pw.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}\$".toRegex())
+
     }
 
     private fun signup() {
