@@ -8,6 +8,7 @@ import com.bestteam.myfitroutine.LogIn.LogInActivity
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.databinding.ActivityLoginBinding
 import com.bestteam.myfitroutine.databinding.ActivitySignupBinding
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -25,8 +26,7 @@ class SignUpActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         binding.signupButton.setOnClickListener {
-            if (allcheck())
-            {
+            if (allcheck()) {
                 signup()
             }
         }
@@ -47,6 +47,9 @@ class SignUpActivity : AppCompatActivity() {
 
         if (email.isEmpty()) {
             binding.signupEmail.error = "이메일을 입력해주세요."
+            return false
+        } else if (emailcheck(email)) {
+            binding.signupEmail.error = "이미 존재하는 이메일 입니다."
             return false
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.signupEmail.error = "이메일 형식이 아닙니다."
@@ -93,7 +96,8 @@ class SignUpActivity : AppCompatActivity() {
 
     fun pwFilter(text: String): Boolean {
         val specialWord = setOf(
-            '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '<', '>', '=', '+', '?')
+            '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '<', '>', '=', '+', '?'
+        )
         return text.any {
             it in specialWord
         }
@@ -101,7 +105,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun isValidPassword(pw: String): Boolean {
-            return pw.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}\$".toRegex())
+        return pw.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}\$".toRegex())
 
     }
 
@@ -116,13 +120,15 @@ class SignUpActivity : AppCompatActivity() {
                     if (user != null) {
                         saveUserData(user.uid)
                         Toast.makeText(this, "회원 가입 성공", Toast.LENGTH_SHORT).show()
-                        intent = Intent(this,LogInActivity :: class.java)
+                        intent = Intent(this, LogInActivity::class.java)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this, "회원 가입 실패: 사용자 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "회원 가입 실패: 사용자 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 } else {
-                    Toast.makeText(this, "회원 가입 실패: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "회원 가입 실패: ${task.exception?.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
     }
@@ -148,7 +154,23 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    private fun emailcheck(email: String): Boolean {
+        var bool = false
+        auth?.fetchSignInMethodsForEmail(email)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethods = task.result?.signInMethods ?: emptyList<String>()
 
+                    if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
+                        Toast.makeText(this, "이미 가입된 이메일입니다.", Toast.LENGTH_SHORT).show()
+                        bool = true
+                    } else {
+                        bool = false
+                    }
+                }
+            }
+        return bool
+    }
 }
 
 
