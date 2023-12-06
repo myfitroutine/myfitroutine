@@ -42,15 +42,7 @@ class MainFragment : Fragment() {
         val todayWeight = binding.txtTodayWeight
         val yesterdayWeight = binding.txtYesterWeight
 
-        val goLoginPG = binding.goToLogin
 
-        goLoginPG.setOnClickListener{
-            activity?.let{
-                val intent = Intent(context, LogInActivity::class.java)
-                startActivity(intent)
-            }
-
-        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getYesterdayWeight()
