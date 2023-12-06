@@ -73,292 +73,15 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout4"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/meal_radius2"
-            android:padding="7dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
-
-            <TextView
-                android:id="@+id/title_breakfast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="아침"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/breakfast1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/breakfast2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_breakfast" />
-
-            <TextView
-                android:id="@+id/breakfast2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/breakfast1"
-                app:layout_constraintEnd_toStartOf="@+id/breakfast3"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/breakfast1"
-                app:layout_constraintTop_toTopOf="@+id/breakfast1" />
-
-            <TextView
-                android:id="@+id/breakfast3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/breakfast2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/breakfast2"
-                app:layout_constraintTop_toTopOf="@+id/breakfast2" />
-
-            <TextView
-                android:id="@+id/breakfast_calorie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="칼로리 :"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                app:layout_constraintEnd_toStartOf="@+id/breakfast_calorie_num"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/breakfast1" />
-
-            <TextView
-                android:id="@+id/breakfast_calorie_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="200Kcal"
-                android:textColor="#FFC300"
-                android:textSize="13sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/breakfast_calorie"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/breakfast_calorie" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/meal_radius2"
-            android:padding="7dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
-
-            <TextView
-                android:id="@+id/title_lunch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="점심"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/lunch1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/lunch2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_lunch" />
-
-            <TextView
-                android:id="@+id/lunch2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/lunch1"
-                app:layout_constraintEnd_toStartOf="@+id/lunch3"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/lunch1"
-                app:layout_constraintTop_toTopOf="@+id/lunch1" />
-
-            <TextView
-                android:id="@+id/lunch3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/lunch2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/lunch2"
-                app:layout_constraintTop_toTopOf="@+id/lunch2" />
-
-            <TextView
-                android:id="@+id/lunch_calorie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="칼로리 :"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                app:layout_constraintEnd_toStartOf="@+id/lunch_calorie_num"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lunch1" />
-
-            <TextView
-                android:id="@+id/lunch_calorie_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="200Kcal"
-                android:textColor="#FFC300"
-                android:textSize="13sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/lunch_calorie"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/lunch_calorie" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/meal_radius2"
-            android:padding="7dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.842"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
-
-            <TextView
-                android:id="@+id/title_dinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="저녁"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/dinner1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/dinner2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_dinner" />
-
-            <TextView
-                android:id="@+id/dinner2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/dinner1"
-                app:layout_constraintEnd_toStartOf="@+id/dinner3"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dinner1"
-                app:layout_constraintTop_toTopOf="@+id/dinner1" />
-
-            <TextView
-                android:id="@+id/dinner3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="달걀 1개"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/dinner2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dinner2"
-                app:layout_constraintTop_toTopOf="@+id/dinner2" />
-
-            <TextView
-                android:id="@+id/dinner_calorie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="칼로리 :"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                app:layout_constraintEnd_toStartOf="@+id/dinner_calorie_num"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dinner1" />
-
-            <TextView
-                android:id="@+id/dinner_calorie_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="200Kcal"
-                android:textColor="#FFC300"
-                android:textSize="13sp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/dinner_calorie"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dinner_calorie" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"/>
 
         <ImageView
             android:id="@+id/imageView3"
@@ -378,7 +101,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/meal_radius2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
         <TextView
             android:id="@+id/total_calorie"
@@ -520,7 +243,7 @@
             app:layout_constraintTop_toBottomOf="@+id/view2" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginHorizontal="10dp"
@@ -538,7 +261,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
