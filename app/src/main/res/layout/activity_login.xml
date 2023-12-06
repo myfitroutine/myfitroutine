@@ -4,16 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#003566">
+    android:background="#003566"
+    tools:context=".LogIn.LogInActivity"
+    android:paddingTop="30dp">
 
     <ImageView
         android:id="@+id/login_background"
-        android:layout_width="411dp"
-        android:layout_height="683dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/login_background" />
 
     <TextView
@@ -31,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/login_background" />
 
-    <TextView
+    <EditText
         android:id="@+id/login_email"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
@@ -71,7 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_email" />
 
-    <TextView
+    <EditText
         android:id="@+id/login_pw"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
@@ -102,7 +105,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
+    <TextView
         android:id="@+id/login_signup_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,6 +113,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="sans-serif"
         android:text="회원가입하기"
+        android:textColor="#000000"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_pw" />
@@ -119,13 +123,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/notosans_black"
         android:text="/"
         app:layout_constraintStart_toEndOf="@+id/login_signup_button"
         app:layout_constraintTop_toBottomOf="@+id/login_pw" />
 
-    <EditText
+    <TextView
         android:id="@+id/login_id_pw_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
