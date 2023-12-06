@@ -20,10 +20,14 @@ interface MainRepository {
     suspend fun getCurrentDate(): String
     suspend fun getYesterdayDate(): String
     suspend fun getWeightGap(): WeightData?
+
+    suspend fun getWeightDataForLastDays(days: Int): List<WeightData>
 }
 class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
 
     private val collection = db.collection("uni")
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getCurrentDate(): String {
@@ -81,5 +85,19 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         return WeightData("",weightGapValue,currentDate)
 
         Log.d("nyh", "getWeightGap: $weightGapValue")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getWeightDataForLastDays(days: Int): List<WeightData> {
+        val endDate = LocalDate.now()
+        val startDate = endDate.minusDays(days.toLong())
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+
+        val querySnapshot = collection
+            .whereGreaterThanOrEqualTo("date", startDate.format(dateFormat))
+            .whereLessThanOrEqualTo("date", endDate.format(dateFormat))
+            .get().await()
+
+        return querySnapshot.documents.mapNotNull { it.toObject(WeightData::class.java) }
     }
 }

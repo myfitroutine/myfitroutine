@@ -61,4 +61,8 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
         }
     }
 
+    fun getRepository(): MainRepository {
+        return repository
+    }
+
 }

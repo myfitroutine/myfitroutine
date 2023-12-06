@@ -27,4 +27,17 @@ class GraphViewModel (private val repository : MainRepository):ViewModel(){
 
         }
     }
+
+    fun filterDataByPeriod(days: Int) {
+        // 선택한 기간에 따라 데이터 필터링
+        viewModelScope.launch {
+            val filteredData = repository.getWeightDataForLastDays(days)
+            _weights.value = filteredData
+            Log.d("nyh", "view model filterDataByPeriod: $filteredData")
+            Log.d("nyh", "view model filterDataByPeriod: $days")
+        }
+    }
+
+
+
 }
