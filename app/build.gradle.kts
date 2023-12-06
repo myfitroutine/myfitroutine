@@ -53,11 +53,13 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     implementation("com.google.dagger:hilt-android:2.44")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 
+    implementation ("com.google.firebase:firebase-auth-ktx")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
