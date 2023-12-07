@@ -68,11 +68,11 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
 
     fun setGoalWeight(fragmentActivity: FragmentActivity) {
         viewModelScope.launch {
-            repository.setGoalWeight { isGoalWeightFieldMissing ->
-                if (isGoalWeightFieldMissing && fragmentActivity.supportFragmentManager.fragments.any { it is MainFragment }) {
-                    // goalWeight 필드가 없을 때 UI에 알림 (예: 다이얼로그 띄우기)
+            repository.setGoalWeight { result ->
+                if (result && fragmentActivity.supportFragmentManager.fragments.any { it is MainFragment }) {
                     val mainFragment = fragmentActivity.supportFragmentManager.fragments.first { it is MainFragment } as MainFragment
                     val dialog = GetGoalWeightDialog()
+                    Log.d("nyh", "viewmodel setGoalWeight: $result")
                     dialog.show(mainFragment.childFragmentManager, "get_goal_weight_dialog")
                 }
             }
