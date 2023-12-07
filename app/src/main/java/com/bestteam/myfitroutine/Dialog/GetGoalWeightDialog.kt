@@ -1,54 +1,60 @@
 package com.bestteam.myfitroutine.Dialog
 
 import android.os.Bundle
-import android.provider.SyncStateContract
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import com.bestteam.myfitroutine.R
-import com.bestteam.myfitroutine.SignUp.UserData
-import com.bestteam.myfitroutine.databinding.FragmentTodayWeightDialogBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 
-class GetGoalWeightDialog : DialogFragment() {
-    private lateinit var binding: FragmentTodayWeightDialogBinding
-    private lateinit var auth: FirebaseAuth
-    private lateinit var fireStore: FirebaseFirestore
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//    }
+/**
+ * A simple [Fragment] subclass.
+ * Use the [GetGoalWeightFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class GetGoalWeightFragment : Fragment() {
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentTodayWeightDialogBinding.inflate(inflater, container, false)
-        val userUid = auth.currentUser?.uid.toString()
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_get_goal_weight, container, false)
+    }
 
-
-        binding.btnConfirm.setOnClickListener {
-            if (userUid != null) {
-                val collection = fireStore.collection("UserData")
-                val document = collection.document(userUid)
-                val goalWeight = binding.editText.text.toString()
-                val userData = hashMapOf("goalWeight" to goalWeight)
-
-                document.update(userData as Map<String, Any>)
-                    .addOnSuccessListener {
-                        collection.document("${auth.currentUser!!.uid}")
-                    }
-                    .addOnFailureListener { e ->
-
-                    }
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment GetGoalWeightFragment.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            GetGoalWeightFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
             }
-        }
-        return binding.root
     }
 }
