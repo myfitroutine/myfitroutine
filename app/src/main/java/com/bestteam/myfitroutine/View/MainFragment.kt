@@ -30,6 +30,8 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
+//        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+//        weightViewModel.setGoalWeight()
         return binding.root
     }
 
@@ -67,6 +69,20 @@ class MainFragment : Fragment() {
             val graphFragment = GraphFragment()
             val transaction = fragmentManager?.beginTransaction()
             transaction?.replace(R.id.fragmentFrame, graphFragment)
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
+        binding.btnDiary.setOnClickListener {
+            val diaryFragment = DiaryFragment()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragmentFrame, diaryFragment)
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
+        binding.btnMeal.setOnClickListener {
+            val mealFragment = MealFragment()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragmentFrame, mealFragment)
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
