@@ -30,6 +30,8 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
+        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        weightViewModel.setGoalWeight()
         return binding.root
     }
 

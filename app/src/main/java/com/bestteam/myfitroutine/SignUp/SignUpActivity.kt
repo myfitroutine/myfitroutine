@@ -171,6 +171,17 @@ class SignUpActivity : AppCompatActivity() {
             }
         return bool
     }
+    fun getGoalWeight(goalWeight : Int){
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if(currentUser != null) {
+            val uid = currentUser.uid
+            val db = FirebaseFirestore.getInstance()
+            val userCollection = db.collection("UserData")
+            val document = userCollection.document(uid)
+            
+        }
+    }
 }
 
 

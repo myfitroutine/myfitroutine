@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog
 import com.bestteam.myfitroutine.Model.WeightData
 import com.bestteam.myfitroutine.Repository.MainRepository
 import com.bestteam.myfitroutine.Repository.MainRepositoryImpl
+import com.bestteam.myfitroutine.View.MainFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,6 +65,17 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
 
     fun getRepository(): MainRepository {
         return repository
+    }
+
+    fun setGoalWeight() {
+        viewModelScope.launch {
+            val result = repository.setGoalWeight()
+            if (result.isEmpty()) {
+                val mainFragment = MainFragment()
+                val dialog = GetGoalWeightDialog()
+                dialog.show(mainFragment.childFragmentManager, "get_goal_weight_dialog")
+            }
+        }
     }
 
 }
