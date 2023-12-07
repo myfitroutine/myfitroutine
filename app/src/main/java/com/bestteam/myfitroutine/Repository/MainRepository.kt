@@ -3,16 +3,10 @@ package com.bestteam.myfitroutine.Repository
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog
-import com.bestteam.myfitroutine.MainActivity
 import com.bestteam.myfitroutine.Model.WeightData
-import com.bestteam.myfitroutine.SignUp.UserData
-import com.bestteam.myfitroutine.View.MainFragment
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -26,18 +20,16 @@ interface MainRepository {
     suspend fun getYesterdayDate(): String
     suspend fun getWeightGap(): WeightData?
     suspend fun setGoalWeight(callback: (Boolean) -> Unit)
-
     suspend fun getWeightDataForLastDays(days: Int): List<WeightData>
+    suspend fun getGoalWeight(): Int?
+    suspend fun getGoalWeightGap(): Int?
+
 }
 class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
-    private var auth: FirebaseAuth
 
-    init {
-        auth = FirebaseAuth.getInstance()
-    }
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val userUid = auth.currentUser?.uid.toString()
     private val collection = db.collection(userUid)
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -120,18 +112,49 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         val document = UserData.document(userUid)
 
         try {
-            document.get().addOnSuccessListener { snapshot ->
-                if (snapshot.exists()) {
-                    if (!snapshot.contains("goalWeight")) {
-                        callback.invoke(true)
-                    }
-                }
-            }.await()
+            val snapshot = document.get().await()
 
-            callback.invoke(false)
+            if (snapshot.exists() && !snapshot.contains("goalWeight")) {
+                Log.d("nyh", "setGoalWeight repo  user Uid = $userUid ")
+                callback.invoke(true)
+            } else {
+                callback.invoke(false)
+            }
         } catch (e: Exception) {
-            Log.e("nyh", "repo Error in setGoalWeight", e)
+            Log.e("nyh", "repo error setGoalWeight", e)
             callback.invoke(false)
         }
+    }
+
+    override suspend fun getGoalWeight(): Int? {
+        val fireStore = FirebaseFirestore.getInstance()
+        val userDataCollection = fireStore.collection("UserData")
+        val document = userDataCollection.document(userUid)
+
+        try {
+            val snapshot = document.get().await()
+
+            if (snapshot.exists() && snapshot.contains("goalWeight")) {
+                val goalWeight = snapshot.getString("goalWeight")
+                Log.d("nyh", "getGoalWeight: $goalWeight")
+                return goalWeight ?.toInt()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return null
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getGoalWeightGap(): Int? {
+        val todayWeight = getTodayWeight()?.weight
+        val goalWeight = getGoalWeight()
+
+        if (todayWeight == null) {
+            return null
+        }
+        return goalWeight?.let { todayWeight?.minus(it) }
+        Log.d("nyh", "getGoalWeightGap repo goalWeightGap : ${getGoalWeight()} ")
     }
 }

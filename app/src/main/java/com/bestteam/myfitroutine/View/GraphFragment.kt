@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bestteam.myfitroutine.Dialog.FilterDateDialog
+import com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog
 import com.bestteam.myfitroutine.Model.WeightData
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.ViewModel.GraphViewModel
@@ -28,6 +29,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import kotlinx.coroutines.launch
 
+@Suppress("UNREACHABLE_CODE")
 class GraphFragment : Fragment() {
     private lateinit var binding: FragmentGraghBinding
     private lateinit var viewModel: GraphViewModel
@@ -58,6 +60,27 @@ class GraphFragment : Fragment() {
         binding.btnSetDate.setOnClickListener {
             val filterDateDialog = FilterDateDialog()
             filterDateDialog.show(childFragmentManager, "filterDateDialog")
+        }
+
+        val goalWeight = binding.txtGoalWeight
+        val goalWeightGap = binding.txtGapGaolWeight
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeight()
+            viewModel.goalWeight.collect { goal ->
+                goalWeight.text = goal.toString()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeightGap()
+            viewModel.goaweightGap.collect { goalGap ->
+                goalWeightGap.text = goalGap.toString()
+            }
+        }
+        binding.btnSetGoal.setOnClickListener {
+            val getGoalWeightDialog = GetGoalWeightDialog()
+            getGoalWeightDialog.show(childFragmentManager, "getGoalWeight")
         }
     }
 
@@ -92,7 +115,8 @@ class GraphFragment : Fragment() {
             legend.isEnabled = false
 
             // 체중의 최대값을 가져와서 Y축의 최대값으로 설정
-            val maxWeight = viewModel.weights.value?.maxByOrNull { it.weight }?.weight ?: 50f
+            val maxWeight =
+                viewModel.weights.value?.maxByOrNull { it.weight }?.weight?.toFloat() ?: 50f
             axisLeft.axisMaximum = maxWeight as Float + 100f
 
             legend.apply {
@@ -112,7 +136,7 @@ class GraphFragment : Fragment() {
 
         weights.forEachIndexed { index, weightData ->
             entries.add(
-               Entry(
+                Entry(
                     index.toFloat(),
                     weightData.weight.toFloat()
                 )
@@ -165,7 +189,23 @@ class GraphFragment : Fragment() {
             return label
         }
     }
+
+    fun updateUI() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeight()
+            viewModel.goalWeight.collect { goal ->
+                binding.txtGoalWeight.text = goal.toString()
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeightGap()
+            viewModel.goaweightGap.collect { goalGap ->
+                binding.txtGapGaolWeight.text = goalGap.toString()
+            }
+        }
+    }
 }
+
 class XYMarkerView(
     context: Context,
     private val xAxisDates: List<String>

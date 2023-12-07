@@ -1,6 +1,5 @@
 package com.bestteam.myfitroutine.View
 
-import android.content.Intent
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.bestteam.myfitroutine.Dialog.TodayWeightDialog
-import com.bestteam.myfitroutine.LogIn.LogInActivity
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.ViewModel.MainViewModel
 import com.bestteam.myfitroutine.databinding.FragmentMainBinding
@@ -30,8 +28,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-//        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-//        weightViewModel.setGoalWeight()
+
         return binding.root
     }
 
@@ -40,10 +37,10 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        weightViewModel.setGoalWeight(requireActivity())
 
         val todayWeight = binding.txtTodayWeight
         val yesterdayWeight = binding.txtYesterWeight
-
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -92,6 +89,7 @@ class MainFragment : Fragment() {
         super.onResume()
 
         weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
         val todayWeight = binding.txtTodayWeight
         var weightGap = binding.txtChangeWeight
         var weightGapTxt = binding.txtChagneTxt
