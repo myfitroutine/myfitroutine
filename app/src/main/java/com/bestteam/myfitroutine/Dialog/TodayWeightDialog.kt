@@ -10,14 +10,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bestteam.myfitroutine.Model.WeightData
-import com.bestteam.myfitroutine.Repository.MainRepository
 import com.bestteam.myfitroutine.View.MainFragment
 import com.bestteam.myfitroutine.ViewModel.MainViewModel
 import com.bestteam.myfitroutine.databinding.FragmentTodayWeightDialogBinding
-import com.google.firebase.Timestamp
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class TodayWeightDialog : DialogFragment() {
