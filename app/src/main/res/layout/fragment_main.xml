@@ -94,5 +94,25 @@
             android:text="했어요!" />
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_diary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="다이어리"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_graph" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_meal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="식단짜기"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_diary" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
