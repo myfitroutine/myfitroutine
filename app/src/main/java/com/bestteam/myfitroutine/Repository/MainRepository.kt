@@ -25,13 +25,13 @@ interface MainRepository {
     suspend fun getCurrentDate(): String
     suspend fun getYesterdayDate(): String
     suspend fun getWeightGap(): WeightData?
-    suspend fun setGoalWeight(): String
+    suspend fun setGoalWeight(callback: (Boolean) -> Unit)
 
     suspend fun getWeightDataForLastDays(days: Int): List<WeightData>
 }
 class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
-    private lateinit var auth: FirebaseAuth
 
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val userUid = auth.currentUser?.uid.toString()
     private val collection = db.collection(userUid)
 
@@ -110,19 +110,24 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         return querySnapshot.documents.mapNotNull { it.toObject(WeightData::class.java) }
     }
 
-    override suspend fun setGoalWeight(): String {
+    override suspend fun setGoalWeight(callback: (Boolean) -> Unit){
         val fireStore = FirebaseFirestore.getInstance()
         val UserData = fireStore.collection("UserData")
         val document = UserData.document(userUid)
-        document.get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                if(!snapshot.contains("goalWeight")){
-                    val dialog = GetGoalWeightDialog()
-                    val activity = MainActivity()
-                    dialog.show(activity.supportFragmentManager, "get_goal_weight_dialog")
+
+        try {
+            document.get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    if (!snapshot.contains("goalWeight")) {
+                        Log.d("nyh", "setGoalWeight repo : $userUid ")
+                        callback.invoke(true)
+                    }
                 }
-            }
+            }.await()
+            callback.invoke(false)
+        } catch (e: Exception) {
+            Log.e("nyh", "repo error setGoalWeight", e)
+            callback.invoke(false)
         }
-        return ""
     }
 }

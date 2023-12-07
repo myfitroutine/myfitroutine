@@ -1,8 +1,7 @@
 package com.bestteam.myfitroutine.ViewModel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog
@@ -67,15 +66,16 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
         return repository
     }
 
-    fun setGoalWeight() {
+    fun setGoalWeight(fragmentActivity: FragmentActivity) {
         viewModelScope.launch {
-            val result = repository.setGoalWeight()
-            if (result.isEmpty()) {
-                val mainFragment = MainFragment()
-                val dialog = GetGoalWeightDialog()
-                dialog.show(mainFragment.childFragmentManager, "get_goal_weight_dialog")
+            repository.setGoalWeight { isGoalWeightFieldMissing ->
+                if (isGoalWeightFieldMissing && fragmentActivity.supportFragmentManager.fragments.any { it is MainFragment }) {
+                    // goalWeight 필드가 없을 때 UI에 알림 (예: 다이얼로그 띄우기)
+                    val mainFragment = fragmentActivity.supportFragmentManager.fragments.first { it is MainFragment } as MainFragment
+                    val dialog = GetGoalWeightDialog()
+                    dialog.show(mainFragment.childFragmentManager, "get_goal_weight_dialog")
+                }
             }
         }
     }
-
 }
