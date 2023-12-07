@@ -13,12 +13,14 @@ import com.bestteam.myfitroutine.Model.WeightData
 import com.bestteam.myfitroutine.View.MainFragment
 import com.bestteam.myfitroutine.ViewModel.MainViewModel
 import com.bestteam.myfitroutine.databinding.FragmentTodayWeightDialogBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 
 class TodayWeightDialog : DialogFragment() {
     private lateinit var binding: FragmentTodayWeightDialogBinding
     private lateinit var viewModel: MainViewModel
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +38,12 @@ class TodayWeightDialog : DialogFragment() {
         binding.btnConfirm.setOnClickListener {
             val todayWeightText = binding.editText.text.toString()
             val todayWeight = if (todayWeightText.isNotEmpty()) todayWeightText.toInt() else 0
+            val userUid = auth.currentUser?.uid.toString()
 
             lifecycleScope.launch { // lifecycleScope.launch를 사용하여 코루틴 시작
                 val yearMonthDay = viewModel.getRepository().getCurrentDate()
 
-                val weight = WeightData("uni", todayWeight, yearMonthDay)
+                val weight = WeightData(userUid, todayWeight, yearMonthDay)
 
                 if (todayWeightText.isEmpty()) {
                     viewModel.addWeight(weight)

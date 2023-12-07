@@ -1,5 +1,7 @@
 package com.bestteam.myfitroutine.View
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -19,7 +21,6 @@ import kotlinx.coroutines.launch
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
-
     private lateinit var weightViewModel: MainViewModel
 
 
@@ -32,6 +33,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,27 +43,70 @@ class MainFragment : Fragment() {
 
         val todayWeight = binding.txtTodayWeight
         val yesterdayWeight = binding.txtYesterWeight
+        val todayDate = binding.txtToday
+        val userName = binding.txtNickname
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getUserName()
+            weightViewModel.currentUserName.collect { name ->
+                userName.text = name
+            }
+        }
 
 
         viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getCurrentDate()
+            weightViewModel.currentDate.collect { currentDate ->
+                todayDate.text = currentDate
+            }
+        }
+
+
+
+            viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getYesterdayWeight()
             weightViewModel.yesterdayWeight.collect { yesterday ->
-                yesterdayWeight.text = (yesterday ?: "없어요").toString()
+                if (yesterday != null) {
+                    yesterdayWeight.text = yesterday.toString()+"KG"
+                    Log.d("nyh main", "onViewCreated:yesterday $yesterday")
+                } else {
+                    yesterdayWeight.text = "0"
+                }
+//                yesterdayWeight.text = (yesterday ?: "").toString()+"KG"
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getTodayWeight()
             weightViewModel.todayWeight.collect { newWeight ->
+
+                if (newWeight != null) {
+                    todayWeight.text = newWeight.toString()
+                } else {
+                    todayWeight.text = "0"
+                }
                 Log.d("nyh main", "onViewCreated: $newWeight")
-                todayWeight.text = (newWeight ?: "없어요").toString()
+//                todayWeight.text = (newWeight ?: "").toString()+"KG"
             }
         }
+        val editTextToday= binding.btnTodayWeight
+        val editToday: String? = todayWeight.text.toString()
 
+        if (editToday.isNullOrEmpty()){
+            editTextToday.text = "입력하기"
+        } else {
+            editTextToday.text = "수정하기"
+        }
+
+        todayWeight.setOnClickListener {
+            val todayWeightDialog = TodayWeightDialog()
+            todayWeightDialog.show(childFragmentManager, "TodayWeight")
+        }
         binding.btnTodayWeight.setOnClickListener {
             val todayWeightDialog = TodayWeightDialog()
             todayWeightDialog.show(childFragmentManager, "TodayWeight")
         }
+
         binding.btnGraph.setOnClickListener {
             val graphFragment = GraphFragment()
             val transaction = fragmentManager?.beginTransaction()
@@ -93,6 +138,14 @@ class MainFragment : Fragment() {
         val todayWeight = binding.txtTodayWeight
         var weightGap = binding.txtChangeWeight
         var weightGapTxt = binding.txtChagneTxt
+        val todayDate = binding.txtToday
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getCurrentDate()
+            weightViewModel.currentDate.collect { currentDate ->
+                todayDate.text = currentDate
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getTodayWeight()
@@ -102,6 +155,7 @@ class MainFragment : Fragment() {
             }
         }
 
+
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getWeightGap()
             weightViewModel.weightGap.collect { getWeightGap ->
@@ -109,29 +163,24 @@ class MainFragment : Fragment() {
                 when {
                     getWeightGap != null && getWeightGap < 0 -> {
                         weightGapTxt.text = "감량"
-                        weightGap.text = getWeightGap.toString()
-                    }
-
-                    getWeightGap != null && getWeightGap == 0 -> {
-                        weightGapTxt.text = "같음"
-                        weightGap.text = getWeightGap.toString()
+                        weightGap.text = Math.abs(getWeightGap).toString()
+                        weightGapTxt.setTextColor(Color.BLUE)
+                        binding.linearLayout4.visibility = View.VISIBLE
                     }
 
                     getWeightGap != null && getWeightGap > 0 -> {
                         weightGapTxt.text = "증량"
                         weightGap.text = getWeightGap.toString()
+                        weightGapTxt.setTextColor(Color.RED)
+                        binding.linearLayout4.visibility = View.VISIBLE
                     }
 
                     else -> {
-                        weightGapTxt.text = "가 없어요"
-                        weightGap.text = "비교"
+                        Log.d("nyh main", "Setting LinearLayout to GONE")
+                        binding.linearLayout4.visibility = View.GONE
                     }
                 }
-                Log.d("nyh main", "onresume getWeightGap = : $getWeightGap")
-                weightGap.text = (getWeightGap ?: "없어요").toString()
             }
-
         }
-
     }
 }

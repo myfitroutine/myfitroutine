@@ -23,6 +23,7 @@ interface MainRepository {
     suspend fun getWeightDataForLastDays(days: Int): List<WeightData>
     suspend fun getGoalWeight(): Int?
     suspend fun getGoalWeightGap(): Int?
+    suspend fun getUserName(): String?
 
 }
 class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
@@ -156,5 +157,25 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         }
         return goalWeight?.let { todayWeight?.minus(it) }
         Log.d("nyh", "getGoalWeightGap repo goalWeightGap : ${getGoalWeight()} ")
+    }
+
+    override suspend fun getUserName(): String? {
+        val fireStore = FirebaseFirestore.getInstance()
+        val userDataCollection = fireStore.collection("UserData")
+        val document = userDataCollection.document(userUid)
+
+        try {
+            val snapshot = document.get().await()
+
+            if (snapshot.exists() && snapshot.contains("name")) {
+                val userName = snapshot.getString("name")
+                Log.d("nyh", "getUserNickName: $userName")
+                return userName
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return null
     }
 }

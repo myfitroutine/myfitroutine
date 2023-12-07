@@ -28,6 +28,11 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
     private val _getWeightGap = MutableStateFlow<Int?>(null)
     val weightGap : StateFlow<Int?> get() = _getWeightGap
 
+    private val _currentDate = MutableStateFlow<String?>(null)
+    val currentDate: StateFlow<String?> get() = _currentDate
+
+    private val _currentUserName = MutableStateFlow<String?>(null)
+    val currentUserName: StateFlow<String?> get() = _currentUserName
 
     fun addWeight(weight: WeightData){
         viewModelScope.launch {
@@ -78,4 +83,20 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             }
         }
     }
+    fun getCurrentDate() {
+        viewModelScope.launch {
+            val currentDate = repository.getCurrentDate()
+            _currentDate.value = currentDate
+        }
+    }
+
+    fun getUserName(){
+        viewModelScope.launch {
+            repository.getUserName()?.let {
+                _currentUserName.value = it
+            }
+        }
+    }
+
+
 }
