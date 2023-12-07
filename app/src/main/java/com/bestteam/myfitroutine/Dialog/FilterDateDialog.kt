@@ -1,14 +1,11 @@
 package com.bestteam.myfitroutine.Dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.ViewModel.GraphViewModel
 import com.bestteam.myfitroutine.databinding.FragmentFilterDateDialogBinding
 
