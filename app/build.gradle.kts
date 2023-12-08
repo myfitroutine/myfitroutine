@@ -40,6 +40,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        dataBinding = true
     }
 
 }
@@ -54,6 +55,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.44")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation("androidx.databinding:databinding-runtime:8.2.0")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")

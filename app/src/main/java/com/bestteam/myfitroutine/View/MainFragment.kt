@@ -2,6 +2,7 @@ package com.bestteam.myfitroutine.View
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -10,19 +11,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.bestteam.myfitroutine.Dialog.TodayWeightDialog
 import com.bestteam.myfitroutine.R
+import com.bestteam.myfitroutine.Util.CustomToast
 import com.bestteam.myfitroutine.ViewModel.MainViewModel
 import com.bestteam.myfitroutine.databinding.FragmentMainBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var weightViewModel: MainViewModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +36,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceAsColor")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +52,10 @@ class MainFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getUserName()
             weightViewModel.currentUserName.collect { name ->
-                userName.text = name
+               if(name != null) {
+                   userName.text = name
+                   CustomToast.createToast(requireContext(), "${name} 님의 운동을 응원합니다!")?.show()
+               }
             }
         }
 
@@ -61,13 +67,11 @@ class MainFragment : Fragment() {
             }
         }
 
-
-
-            viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getYesterdayWeight()
             weightViewModel.yesterdayWeight.collect { yesterday ->
                 if (yesterday != null) {
-                    yesterdayWeight.text = yesterday.toString()+"KG"
+                    yesterdayWeight.text = yesterday.toString() + "KG"
                     Log.d("nyh main", "onViewCreated:yesterday $yesterday")
                 } else {
                     yesterdayWeight.text = "0"
@@ -89,10 +93,11 @@ class MainFragment : Fragment() {
 //                todayWeight.text = (newWeight ?: "").toString()+"KG"
             }
         }
-        val editTextToday= binding.btnTodayWeight
+
+        val editTextToday = binding.btnTodayWeight
         val editToday: String? = todayWeight.text.toString()
 
-        if (editToday.isNullOrEmpty()){
+        if (editToday.isNullOrEmpty()) {
             editTextToday.text = "입력하기"
         } else {
             editTextToday.text = "수정하기"
@@ -151,10 +156,9 @@ class MainFragment : Fragment() {
             weightViewModel.getTodayWeight()
             weightViewModel.todayWeight.collect { newWeight ->
                 Log.d("nyh main", "onViewCreated: $newWeight")
-                todayWeight.text = (newWeight ?: "없어요").toString()
+                todayWeight.text = (newWeight ?: "0").toString()
             }
         }
-
 
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getWeightGap()
