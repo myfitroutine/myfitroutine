@@ -5,13 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.bestteam.myfitroutine.LogIn.LogInActivity
-import com.bestteam.myfitroutine.R
-import com.bestteam.myfitroutine.databinding.ActivityLoginBinding
 import com.bestteam.myfitroutine.databinding.ActivitySignupBinding
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -170,6 +167,17 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
         return bool
+    }
+    fun getGoalWeight(goalWeight : Int){
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if(currentUser != null) {
+            val uid = currentUser.uid
+            val db = FirebaseFirestore.getInstance()
+            val userCollection = db.collection("UserData")
+            val document = userCollection.document(uid)
+            
+        }
     }
 }
 

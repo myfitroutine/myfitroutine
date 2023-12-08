@@ -18,6 +18,12 @@ class GraphViewModel (private val repository : MainRepository):ViewModel(){
     private val _weights = MutableStateFlow<List<WeightData>>(emptyList())
     val weights: StateFlow<List<WeightData>> = _weights
 
+    private val _goalWeight = MutableStateFlow<Int?>(null)
+    val goalWeight : StateFlow<Int?> get() = _goalWeight
+
+    private val _goalWeightGap = MutableStateFlow<Int?>(null)
+    val goaweightGap : StateFlow<Int?> get() = _goalWeightGap
+
 
     fun getAllWeight() {
         viewModelScope.launch {
@@ -38,6 +44,17 @@ class GraphViewModel (private val repository : MainRepository):ViewModel(){
         }
     }
 
-
+    fun getGoalWeight() {
+        viewModelScope.launch {
+            val goalWeights = repository.getGoalWeight()
+            _goalWeight.value = goalWeights
+        }
+    }
+    fun getGoalWeightGap() {
+        viewModelScope.launch {
+            val goalWeightsGap = repository.getGoalWeightGap()
+            _goalWeightGap.value = goalWeightsGap
+        }
+    }
 
 }
