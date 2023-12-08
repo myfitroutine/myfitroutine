@@ -40,7 +40,6 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
         }
     }
 
-
     fun getTodayWeight() {
         viewModelScope.launch {
             repository.getTodayWeight()?.let {
@@ -58,6 +57,7 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             Log.d("nyh", "getgetYesterdayDate Viewmodel : value = ${_yesterdayWeight.value}")
         }
     }
+
     fun getWeightGap() {
         viewModelScope.launch {
             repository.getWeightGap()?.let {
@@ -83,6 +83,7 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             }
         }
     }
+
     fun getCurrentDate() {
         viewModelScope.launch {
             val currentDate = repository.getCurrentDate()
@@ -97,6 +98,4 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             }
         }
     }
-
-
 }

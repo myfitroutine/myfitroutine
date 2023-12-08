@@ -1,0 +1,256 @@
+Index: app/src/main/java/com/bestteam/myfitroutine/Dialog/DateFilterDialog.kt
+===================================================================
+diff --git a/app/src/main/java/com/bestteam/myfitroutine/Dialog/DateFilterDialog.kt b/app/src/main/java/com/bestteam/myfitroutine/Dialog/DateFilterDialog.kt
+deleted file mode 100644
+--- a/app/src/main/java/com/bestteam/myfitroutine/Dialog/DateFilterDialog.kt	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ /dev/null	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
+@@ -1,6 +0,0 @@
+-package com.bestteam.myfitroutine.Dialog
+-
+-import androidx.fragment.app.DialogFragment
+-
+-class DateFilterDialog : DialogFragment() {
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/bestteam/myfitroutine/Repository/MainRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bestteam.myfitroutine.Repository\r\n\r\nimport android.os.Build\r\nimport android.util.Log\r\nimport androidx.annotation.RequiresApi\r\nimport com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog\r\nimport com.bestteam.myfitroutine.MainActivity\r\nimport com.bestteam.myfitroutine.Model.WeightData\r\nimport com.bestteam.myfitroutine.SignUp.UserData\r\nimport com.bestteam.myfitroutine.View.MainFragment\r\nimport com.google.firebase.Timestamp\r\nimport com.google.firebase.auth.FirebaseAuth\r\nimport com.google.firebase.firestore.FirebaseFirestore\r\nimport kotlinx.coroutines.tasks.await\r\nimport java.text.SimpleDateFormat\r\nimport java.time.LocalDate\r\nimport java.time.format.DateTimeFormatter\r\nimport java.util.Locale\r\n\r\ninterface MainRepository {\r\n    suspend fun addWeight(weight: WeightData)\r\n    suspend fun getAllWeight(): List<WeightData>\r\n    suspend fun getTodayWeight(): WeightData?\r\n    suspend fun getYesterdayWeight(): WeightData?\r\n    suspend fun getCurrentDate(): String\r\n    suspend fun getYesterdayDate(): String\r\n    suspend fun getWeightGap(): WeightData?\r\n    suspend fun setGoalWeight(): String\r\n\r\n    suspend fun getWeightDataForLastDays(days: Int): List<WeightData>\r\n}\r\nclass MainRepositoryImpl (db: FirebaseFirestore): MainRepository {\r\n    private lateinit var auth: FirebaseAuth\r\n\r\n    private val userUid = auth.currentUser?.uid.toString()\r\n    private val collection = db.collection(userUid)\r\n\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun getCurrentDate(): String {\r\n        val currentDate = LocalDate.now()\r\n        val dateFormat = DateTimeFormatter.ofPattern(\"yyyy-MM-dd\", Locale.getDefault())\r\n        return currentDate.format(dateFormat)\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun getYesterdayDate(): String {\r\n        val yesterday = LocalDate.now().minusDays(1)\r\n        val dateFormat = DateTimeFormatter.ofPattern(\"yyyy-MM-dd\", Locale.getDefault())\r\n        return yesterday.format(dateFormat)\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun addWeight(weight: WeightData) {\r\n        val today = getCurrentDate()\r\n\r\n        // Document ID를 현재 년, 월, 일로 설정하여 추가\r\n        collection.document(today).set(weight).await()\r\n    }\r\n\r\n    override suspend fun getAllWeight(): List<WeightData> {\r\n        val querySnapshot = collection.get().await()\r\n        return querySnapshot.documents.mapNotNull { it.toObject(WeightData::class.java) }\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun getTodayWeight(): WeightData? {\r\n        val today = getCurrentDate()\r\n        val document = collection.document(today).get().await()\r\n        Log.d(\"nyh\", \"getTodayWeight: repo $today\")\r\n\r\n        return document.toObject(WeightData::class.java)\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun getYesterdayWeight(): WeightData? {\r\n        val yesterday = getYesterdayDate()\r\n        val document = collection.document(yesterday).get().await()\r\n        Log.d(\"nyh\", \"getYesterdayWeight repo: $yesterday\")\r\n        return document.toObject((WeightData::class.java))\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun getWeightGap(): WeightData? {\r\n        val yesterdayWeight = getYesterdayWeight()?.weight\r\n        val todayWeight = getTodayWeight()?.weight\r\n\r\n        if (yesterdayWeight == null || todayWeight == null) {\r\n            return null\r\n        }\r\n        val weightGapValue = todayWeight - yesterdayWeight\r\n        val currentDate = getCurrentDate()\r\n\r\n        return WeightData(\"\", weightGapValue, currentDate)\r\n\r\n        Log.d(\"nyh\", \"getWeightGap: $weightGapValue\")\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override suspend fun getWeightDataForLastDays(days: Int): List<WeightData> {\r\n        val endDate = LocalDate.now()\r\n        val startDate = endDate.minusDays(days.toLong())\r\n        val dateFormat = DateTimeFormatter.ofPattern(\"yyyy-MM-dd\", Locale.getDefault())\r\n\r\n        val querySnapshot = collection\r\n            .whereGreaterThanOrEqualTo(\"date\", startDate.format(dateFormat))\r\n            .whereLessThanOrEqualTo(\"date\", endDate.format(dateFormat))\r\n            .get().await()\r\n\r\n        return querySnapshot.documents.mapNotNull { it.toObject(WeightData::class.java) }\r\n    }\r\n\r\n    override suspend fun setGoalWeight(): String {\r\n        val fireStore = FirebaseFirestore.getInstance()\r\n        val UserData = fireStore.collection(\"UserData\")\r\n        val document = UserData.document(userUid)\r\n        document.get().addOnSuccessListener { snapshot ->\r\n            if (snapshot.exists()) {\r\n                if(!snapshot.contains(\"goalWeight\")){\r\n                    val dialog = GetGoalWeightDialog()\r\n                    val activity = MainActivity()\r\n                    dialog.show(activity.supportFragmentManager, \"get_goal_weight_dialog\")\r\n                }\r\n            }\r\n        }\r\n        return \"\"\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/bestteam/myfitroutine/Repository/MainRepository.kt b/app/src/main/java/com/bestteam/myfitroutine/Repository/MainRepository.kt
+--- a/app/src/main/java/com/bestteam/myfitroutine/Repository/MainRepository.kt	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ b/app/src/main/java/com/bestteam/myfitroutine/Repository/MainRepository.kt	(date 1701929270913)
+@@ -25,17 +25,21 @@
+     suspend fun getCurrentDate(): String
+     suspend fun getYesterdayDate(): String
+     suspend fun getWeightGap(): WeightData?
+-    suspend fun setGoalWeight(): String
++    suspend fun setGoalWeight(callback: (Boolean) -> Unit)
+ 
+     suspend fun getWeightDataForLastDays(days: Int): List<WeightData>
+ }
+ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
+-    private lateinit var auth: FirebaseAuth
++    private var auth: FirebaseAuth
+ 
++    init {
++        auth = FirebaseAuth.getInstance()
++    }
+     private val userUid = auth.currentUser?.uid.toString()
+     private val collection = db.collection(userUid)
+ 
+ 
++
+     @RequiresApi(Build.VERSION_CODES.O)
+     override suspend fun getCurrentDate(): String {
+         val currentDate = LocalDate.now()
+@@ -110,19 +114,24 @@
+         return querySnapshot.documents.mapNotNull { it.toObject(WeightData::class.java) }
+     }
+ 
+-    override suspend fun setGoalWeight(): String {
++    override suspend fun setGoalWeight(callback: (Boolean) -> Unit) {
+         val fireStore = FirebaseFirestore.getInstance()
+         val UserData = fireStore.collection("UserData")
+         val document = UserData.document(userUid)
+-        document.get().addOnSuccessListener { snapshot ->
+-            if (snapshot.exists()) {
+-                if(!snapshot.contains("goalWeight")){
+-                    val dialog = GetGoalWeightDialog()
+-                    val activity = MainActivity()
+-                    dialog.show(activity.supportFragmentManager, "get_goal_weight_dialog")
+-                }
+-            }
++
++        try {
++            document.get().addOnSuccessListener { snapshot ->
++                if (snapshot.exists()) {
++                    if (!snapshot.contains("goalWeight")) {
++                        callback.invoke(true)
++                    }
++                }
++            }.await()
++
++            callback.invoke(false)
++        } catch (e: Exception) {
++            Log.e("nyh", "repo Error in setGoalWeight", e)
++            callback.invoke(false)
+         }
+-        return ""
+     }
+ }
+Index: app/src/main/res/layout/fragment_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:background=\"@color/white\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".View.MainFragment\">\r\n\r\n\r\n    <TextView\r\n        android:id=\"@+id/txt_yester_weight\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"50dp\"\r\n        android:text=\"0\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/txt_today_weight\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"0\"\r\n        android:layout_marginTop=\"10dp\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/txt_yester_weight\" />\r\n\r\n\r\n\r\n\r\n    <androidx.appcompat.widget.AppCompatButton\r\n        android:id=\"@+id/btn_today_weight\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"오늘몸무게\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n    <androidx.appcompat.widget.AppCompatButton\r\n        android:id=\"@+id/btn_graph\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"그래프\"\r\n        android:layout_marginTop=\"10dp\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/btn_today_weight\" />\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toBottomOf=\"@+id/txt_today_weight\">\r\n\r\n        <TextView\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"어제보다\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/txt_change_weight\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"2\" />\r\n\r\n        <TextView\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"kg\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/txt_chagne_txt\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"감량\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/textView7\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:text=\"했어요!\" />\r\n    </LinearLayout>\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_main.xml b/app/src/main/res/layout/fragment_main.xml
+--- a/app/src/main/res/layout/fragment_main.xml	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ b/app/src/main/res/layout/fragment_main.xml	(date 1701929549441)
+@@ -94,5 +94,25 @@
+             android:text="했어요!" />
+     </LinearLayout>
+ 
++    <androidx.appcompat.widget.AppCompatButton
++        android:id="@+id/btn_diary"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="다이어리"
++        android:layout_marginTop="10dp"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/btn_graph" />
++
++    <androidx.appcompat.widget.AppCompatButton
++        android:id="@+id/btn_meal"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="식단짜기"
++        android:layout_marginTop="10dp"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/btn_diary" />
++
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/bestteam/myfitroutine/Dialog/TodayWeightDialog.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bestteam.myfitroutine.Dialog\r\n\r\nimport android.content.DialogInterface\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.DialogFragment\r\nimport androidx.lifecycle.ViewModelProvider\r\nimport androidx.lifecycle.lifecycleScope\r\nimport com.bestteam.myfitroutine.Model.WeightData\r\nimport com.bestteam.myfitroutine.Repository.MainRepository\r\nimport com.bestteam.myfitroutine.View.MainFragment\r\nimport com.bestteam.myfitroutine.ViewModel.MainViewModel\r\nimport com.bestteam.myfitroutine.databinding.FragmentTodayWeightDialogBinding\r\nimport com.google.firebase.Timestamp\r\nimport kotlinx.coroutines.launch\r\nimport java.text.SimpleDateFormat\r\nimport java.util.Locale\r\n\r\n\r\nclass TodayWeightDialog : DialogFragment() {\r\n    private lateinit var binding: FragmentTodayWeightDialogBinding\r\n    private lateinit var viewModel: MainViewModel\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        binding = FragmentTodayWeightDialogBinding.inflate(inflater, container, false)\r\n        return binding.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)\r\n\r\n        binding.btnConfirm.setOnClickListener {\r\n            val todayWeightText = binding.editText.text.toString()\r\n            val todayWeight = if (todayWeightText.isNotEmpty()) todayWeightText.toInt() else 0\r\n\r\n            lifecycleScope.launch { // lifecycleScope.launch를 사용하여 코루틴 시작\r\n                val yearMonthDay = viewModel.getRepository().getCurrentDate()\r\n\r\n                val weight = WeightData(\"uni\", todayWeight, yearMonthDay)\r\n\r\n                if (todayWeightText.isEmpty()) {\r\n                    viewModel.addWeight(weight)\r\n                    Log.d(\"nyh\", \"dialog if onViewCreated: $todayWeight\")\r\n                    dismiss()\r\n                } else {\r\n                    viewModel.addWeight(weight)\r\n                    Log.d(\"nyh\", \"dialog else onViewCreated: $todayWeight\")\r\n                    dismiss()\r\n                }\r\n            }\r\n        }\r\n    }\r\n    override fun onDismiss(dialog: DialogInterface) {\r\n        super.onDismiss(dialog)\r\n        (parentFragment as? MainFragment)?.onResume()\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/bestteam/myfitroutine/Dialog/TodayWeightDialog.kt b/app/src/main/java/com/bestteam/myfitroutine/Dialog/TodayWeightDialog.kt
+--- a/app/src/main/java/com/bestteam/myfitroutine/Dialog/TodayWeightDialog.kt	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ b/app/src/main/java/com/bestteam/myfitroutine/Dialog/TodayWeightDialog.kt	(date 1701927943403)
+@@ -10,14 +10,10 @@
+ import androidx.lifecycle.ViewModelProvider
+ import androidx.lifecycle.lifecycleScope
+ import com.bestteam.myfitroutine.Model.WeightData
+-import com.bestteam.myfitroutine.Repository.MainRepository
+ import com.bestteam.myfitroutine.View.MainFragment
+ import com.bestteam.myfitroutine.ViewModel.MainViewModel
+ import com.bestteam.myfitroutine.databinding.FragmentTodayWeightDialogBinding
+-import com.google.firebase.Timestamp
+ import kotlinx.coroutines.launch
+-import java.text.SimpleDateFormat
+-import java.util.Locale
+ 
+ 
+ class TodayWeightDialog : DialogFragment() {
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.Myfitroutine\"\r\n        tools:targetApi=\"31\">\r\n\r\n        <activity\r\n            android:name=\".LogIn.FirstMainActivity\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n\r\n        <activity\r\n            android:name=\".SignUp.SignUpActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".LogIn.LogInActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"true\" />\r\n\r\n    </application>\r\n\r\n</manifest>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ b/app/src/main/AndroidManifest.xml	(date 1701928358312)
+@@ -15,11 +15,8 @@
+ 
+         <activity
+             android:name=".LogIn.FirstMainActivity"
+-            android:exported="true">
+-            <intent-filter>
+-                <action android:name="android.intent.action.MAIN" />
+-                <category android:name="android.intent.category.LAUNCHER" />
+-            </intent-filter>
++            android:exported="false">
++
+         </activity>
+ 
+         <activity
+@@ -30,7 +27,12 @@
+             android:exported="false" />
+         <activity
+             android:name=".MainActivity"
+-            android:exported="true" />
++            android:exported="true">
++        <intent-filter>
++            <action android:name="android.intent.action.MAIN" />
++            <category android:name="android.intent.category.LAUNCHER" />
++        </intent-filter>
++        </activity>
+ 
+     </application>
+ 
+Index: app/src/main/java/com/bestteam/myfitroutine/View/MainFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bestteam.myfitroutine.View\r\n\r\nimport android.content.Intent\r\nimport android.os.Build\r\nimport androidx.lifecycle.ViewModelProvider\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.annotation.RequiresApi\r\nimport androidx.lifecycle.lifecycleScope\r\nimport com.bestteam.myfitroutine.Dialog.TodayWeightDialog\r\nimport com.bestteam.myfitroutine.LogIn.LogInActivity\r\nimport com.bestteam.myfitroutine.R\r\nimport com.bestteam.myfitroutine.ViewModel.MainViewModel\r\nimport com.bestteam.myfitroutine.databinding.FragmentMainBinding\r\nimport kotlinx.coroutines.launch\r\n\r\n@Suppress(\"UNREACHABLE_CODE\", \"DEPRECATION\")\r\nclass MainFragment : Fragment() {\r\n    private lateinit var binding: FragmentMainBinding\r\n\r\n    private lateinit var weightViewModel: MainViewModel\r\n\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        binding = FragmentMainBinding.inflate(inflater, container, false)\r\n        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)\r\n        weightViewModel.setGoalWeight()\r\n        return binding.root\r\n    }\r\n\r\n    @RequiresApi(Build.VERSION_CODES.O)\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)\r\n\r\n        val todayWeight = binding.txtTodayWeight\r\n        val yesterdayWeight = binding.txtYesterWeight\r\n\r\n\r\n\r\n        viewLifecycleOwner.lifecycleScope.launch {\r\n            weightViewModel.getYesterdayWeight()\r\n            weightViewModel.yesterdayWeight.collect { yesterday ->\r\n                yesterdayWeight.text = (yesterday ?: \"없어요\").toString()\r\n            }\r\n        }\r\n\r\n        viewLifecycleOwner.lifecycleScope.launch {\r\n            weightViewModel.getTodayWeight()\r\n            weightViewModel.todayWeight.collect { newWeight ->\r\n                Log.d(\"nyh main\", \"onViewCreated: $newWeight\")\r\n                todayWeight.text = (newWeight ?: \"없어요\").toString()\r\n            }\r\n        }\r\n\r\n        binding.btnTodayWeight.setOnClickListener {\r\n            val todayWeightDialog = TodayWeightDialog()\r\n            todayWeightDialog.show(childFragmentManager, \"TodayWeight\")\r\n        }\r\n        binding.btnGraph.setOnClickListener {\r\n            val graphFragment = GraphFragment()\r\n            val transaction = fragmentManager?.beginTransaction()\r\n            transaction?.replace(R.id.fragmentFrame, graphFragment)\r\n            transaction?.addToBackStack(null)\r\n            transaction?.commit()\r\n        }\r\n    }\r\n\r\n    override fun onResume() {\r\n        super.onResume()\r\n\r\n        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)\r\n        val todayWeight = binding.txtTodayWeight\r\n        var weightGap = binding.txtChangeWeight\r\n        var weightGapTxt = binding.txtChagneTxt\r\n\r\n        viewLifecycleOwner.lifecycleScope.launch {\r\n            weightViewModel.getTodayWeight()\r\n            weightViewModel.todayWeight.collect { newWeight ->\r\n                Log.d(\"nyh main\", \"onViewCreated: $newWeight\")\r\n                todayWeight.text = (newWeight ?: \"없어요\").toString()\r\n            }\r\n        }\r\n\r\n        viewLifecycleOwner.lifecycleScope.launch {\r\n            weightViewModel.getWeightGap()\r\n            weightViewModel.weightGap.collect { getWeightGap ->\r\n\r\n                when {\r\n                    getWeightGap != null && getWeightGap < 0 -> {\r\n                        weightGapTxt.text = \"감량\"\r\n                        weightGap.text = getWeightGap.toString()\r\n                    }\r\n\r\n                    getWeightGap != null && getWeightGap == 0 -> {\r\n                        weightGapTxt.text = \"같음\"\r\n                        weightGap.text = getWeightGap.toString()\r\n                    }\r\n\r\n                    getWeightGap != null && getWeightGap > 0 -> {\r\n                        weightGapTxt.text = \"증량\"\r\n                        weightGap.text = getWeightGap.toString()\r\n                    }\r\n\r\n                    else -> {\r\n                        weightGapTxt.text = \"가 없어요\"\r\n                        weightGap.text = \"비교\"\r\n                    }\r\n                }\r\n                Log.d(\"nyh main\", \"onresume getWeightGap = : $getWeightGap\")\r\n                weightGap.text = (getWeightGap ?: \"없어요\").toString()\r\n            }\r\n\r\n        }\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/bestteam/myfitroutine/View/MainFragment.kt b/app/src/main/java/com/bestteam/myfitroutine/View/MainFragment.kt
+--- a/app/src/main/java/com/bestteam/myfitroutine/View/MainFragment.kt	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ b/app/src/main/java/com/bestteam/myfitroutine/View/MainFragment.kt	(date 1701929549456)
+@@ -30,8 +30,8 @@
+         savedInstanceState: Bundle?
+     ): View? {
+         binding = FragmentMainBinding.inflate(inflater, container, false)
+-        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+-        weightViewModel.setGoalWeight()
++//        weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
++//        weightViewModel.setGoalWeight()
+         return binding.root
+     }
+ 
+@@ -71,6 +71,20 @@
+             transaction?.replace(R.id.fragmentFrame, graphFragment)
+             transaction?.addToBackStack(null)
+             transaction?.commit()
++        }
++        binding.btnDiary.setOnClickListener {
++            val diaryFragment = DiaryFragment()
++            val transaction = fragmentManager?.beginTransaction()
++            transaction?.replace(R.id.fragmentFrame, diaryFragment)
++            transaction?.addToBackStack(null)
++            transaction?.commit()
++        }
++        binding.btnMeal.setOnClickListener {
++            val mealFragment = MealFragment()
++            val transaction = fragmentManager?.beginTransaction()
++            transaction?.replace(R.id.fragmentFrame, mealFragment)
++            transaction?.addToBackStack(null)
++            transaction?.commit()
+         }
+     }
+ 
+Index: app/src/main/java/com/bestteam/myfitroutine/ViewModel/MainViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bestteam.myfitroutine.ViewModel\r\n\r\nimport android.util.Log\r\nimport androidx.lifecycle.LiveData\r\nimport androidx.lifecycle.MutableLiveData\r\nimport androidx.lifecycle.ViewModel\r\nimport androidx.lifecycle.viewModelScope\r\nimport com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog\r\nimport com.bestteam.myfitroutine.Model.WeightData\r\nimport com.bestteam.myfitroutine.Repository.MainRepository\r\nimport com.bestteam.myfitroutine.Repository.MainRepositoryImpl\r\nimport com.bestteam.myfitroutine.View.MainFragment\r\nimport com.google.firebase.firestore.FirebaseFirestore\r\nimport kotlinx.coroutines.flow.MutableStateFlow\r\nimport kotlinx.coroutines.flow.StateFlow\r\nimport kotlinx.coroutines.launch\r\n\r\n\r\nclass MainViewModel(private val repository : MainRepository) : ViewModel() {\r\n\r\n    constructor() : this(MainRepositoryImpl(FirebaseFirestore.getInstance()))\r\n\r\n    private val _todayWeight = MutableStateFlow<Int?>(null)\r\n    val todayWeight : StateFlow<Int?> get() = _todayWeight\r\n\r\n    private val _yesterdayWeight = MutableStateFlow<Int?>(null)\r\n    val yesterdayWeight : StateFlow<Int?> get() = _yesterdayWeight\r\n\r\n    private val _getWeightGap = MutableStateFlow<Int?>(null)\r\n    val weightGap : StateFlow<Int?> get() = _getWeightGap\r\n\r\n\r\n    fun addWeight(weight: WeightData){\r\n        viewModelScope.launch {\r\n            repository.addWeight(weight)\r\n        }\r\n    }\r\n\r\n\r\n    fun getTodayWeight() {\r\n        viewModelScope.launch {\r\n            repository.getTodayWeight()?.let {\r\n                _todayWeight.value = it.weight\r\n            }\r\n            Log.d(\"nyh\", \"getTodayWeight Viewmodel : value = ${_todayWeight.value}\")\r\n        }\r\n    }\r\n\r\n    fun getYesterdayWeight(){\r\n        viewModelScope.launch {\r\n            repository.getYesterdayWeight()?.let {\r\n                _yesterdayWeight.value = it.weight\r\n            }\r\n            Log.d(\"nyh\", \"getgetYesterdayDate Viewmodel : value = ${_yesterdayWeight.value}\")\r\n        }\r\n    }\r\n    fun getWeightGap() {\r\n        viewModelScope.launch {\r\n            repository.getWeightGap()?.let {\r\n                _getWeightGap.value = it.weight\r\n                Log.d(\"nyh\", \"getWeightGap viewModel: ${it.weight}\")\r\n            }\r\n        }\r\n    }\r\n\r\n    fun getRepository(): MainRepository {\r\n        return repository\r\n    }\r\n\r\n    fun setGoalWeight() {\r\n        viewModelScope.launch {\r\n            val result = repository.setGoalWeight()\r\n            if (result.isEmpty()) {\r\n                val mainFragment = MainFragment()\r\n                val dialog = GetGoalWeightDialog()\r\n                dialog.show(mainFragment.childFragmentManager, \"get_goal_weight_dialog\")\r\n            }\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/bestteam/myfitroutine/ViewModel/MainViewModel.kt b/app/src/main/java/com/bestteam/myfitroutine/ViewModel/MainViewModel.kt
+--- a/app/src/main/java/com/bestteam/myfitroutine/ViewModel/MainViewModel.kt	(revision 76b1e1fc246dfce0c2ef7782f0aa3ef220b458fa)
++++ b/app/src/main/java/com/bestteam/myfitroutine/ViewModel/MainViewModel.kt	(date 1701928975794)
+@@ -69,13 +69,13 @@
+ 
+     fun setGoalWeight() {
+         viewModelScope.launch {
+-            val result = repository.setGoalWeight()
+-            if (result.isEmpty()) {
+-                val mainFragment = MainFragment()
+-                val dialog = GetGoalWeightDialog()
+-                dialog.show(mainFragment.childFragmentManager, "get_goal_weight_dialog")
++            repository.setGoalWeight { isGoalWeightFieldMissing ->
++                if (isGoalWeightFieldMissing) {
++                    val mainFragment = MainFragment()
++                    val dialog = GetGoalWeightDialog()
++                    dialog.show(mainFragment.childFragmentManager, "get_goal_weight_dialog")
++                }
+             }
+         }
+     }
+-
+ }
+\ No newline at end of file
