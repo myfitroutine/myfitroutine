@@ -41,7 +41,6 @@ class SignUpActivity : AppCompatActivity() {
         val male = binding.signupMaleBox.isChecked
         val female = binding.signupFemaleBox.isChecked
 
-
         if (email.isEmpty()) {
             binding.signupEmail.error = "이메일을 입력해주세요."
             return false
@@ -86,7 +85,6 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this, "키, 몸무게, 나이는 숫자로 입력해주세요.", Toast.LENGTH_LONG).show()
             return false
         }
-
         return true
     }
 
@@ -98,7 +96,6 @@ class SignUpActivity : AppCompatActivity() {
         return text.any {
             it in specialWord
         }
-
     }
 
     private fun isValidPassword(pw: String): Boolean {
@@ -167,17 +164,6 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
         return bool
-    }
-    fun getGoalWeight(goalWeight : Int){
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        if(currentUser != null) {
-            val uid = currentUser.uid
-            val db = FirebaseFirestore.getInstance()
-            val userCollection = db.collection("UserData")
-            val document = userCollection.document(uid)
-            
-        }
     }
 }
 

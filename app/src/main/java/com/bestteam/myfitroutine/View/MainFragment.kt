@@ -59,7 +59,6 @@ class MainFragment : Fragment() {
             }
         }
 
-
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.getCurrentDate()
             weightViewModel.currentDate.collect { currentDate ->

@@ -1,11 +1,15 @@
 package com.bestteam.myfitroutine.Dialog
 
+import android.content.Context
+import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.ViewModel.GraphViewModel
 import com.bestteam.myfitroutine.databinding.FragmentFilterDateDialogBinding
 
@@ -52,6 +56,26 @@ class FilterDateDialog : DialogFragment() {
 //            viewModel.showAllData() // 전체 데이터 표시
 //            dismiss()
 //        }
+    }
+    override fun onResume() {
+        super.onResume()
+
+        //디바이스 크기 구하기
+        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val params : ViewGroup.LayoutParams? = dialog?.window?.attributes
+        val deviceWidth = size.x
+        val deviceHeigh = size.y
+
+        //디바이스 크기의 %로 크기 조정
+        params?.width = (deviceWidth * 0.8).toInt()
+        params?.height = (deviceHeigh * 0.35).toInt()
+        dialog?.window?.attributes = params as WindowManager.LayoutParams
+
+        //다이얼로그 모서리 둥글게 하기
+        dialog?.window?.setBackgroundDrawableResource(R.drawable.meal_dialog_shape)
     }
 
 }

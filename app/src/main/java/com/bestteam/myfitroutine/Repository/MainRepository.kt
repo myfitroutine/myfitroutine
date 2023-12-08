@@ -155,7 +155,7 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         if (todayWeight == null) {
             return null
         }
-        return goalWeight?.let { todayWeight?.minus(it) }
+        return todayWeight?.let { goalWeight?.minus(it) }
         Log.d("nyh", "getGoalWeightGap repo goalWeightGap : ${getGoalWeight()} ")
     }
 
