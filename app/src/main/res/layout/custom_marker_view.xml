@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|left"
-        android:background="@android:color/white"
+        android:background="@drawable/chart_box"
         android:elevation="4dp"
         android:paddingStart="8dp"
         android:paddingTop="4dp"
