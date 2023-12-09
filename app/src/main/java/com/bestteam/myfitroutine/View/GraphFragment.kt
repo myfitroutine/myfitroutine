@@ -175,7 +175,7 @@ class GraphFragment : Fragment() {
             setDrawCircleHole(true)
             circleHoleRadius = 4f
 
-            // 선택 시 테두리 설정
+////             선택 시 라인 하이라이트
 //            setHighlightEnabled(true)
 //            highLightColor = Color.RED
 //            highlightLineWidth = 1f

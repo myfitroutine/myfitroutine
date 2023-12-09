@@ -24,7 +24,6 @@ class FilterDateDialog : DialogFragment() {
     ): View? {
         binding = FragmentFilterDateDialogBinding.inflate(inflater, container, false)
 
-
         return binding.root
     }
 
@@ -50,7 +49,6 @@ class FilterDateDialog : DialogFragment() {
             viewModel.filterDataByPeriod(365) // 365일로 필터링
             dismiss()
         }
-
 //        view.findViewById<TextView>(R.id.txt_all).setOnClickListener {
 //            // "전체"가 선택된 경우
 //            viewModel.showAllData() // 전체 데이터 표시
@@ -71,7 +69,7 @@ class FilterDateDialog : DialogFragment() {
 
         //디바이스 크기의 %로 크기 조정
         params?.width = (deviceWidth * 0.8).toInt()
-        params?.height = (deviceHeigh * 0.35).toInt()
+        params?.height = (deviceHeigh * 0.30).toInt()
         dialog?.window?.attributes = params as WindowManager.LayoutParams
 
         //다이얼로그 모서리 둥글게 하기
