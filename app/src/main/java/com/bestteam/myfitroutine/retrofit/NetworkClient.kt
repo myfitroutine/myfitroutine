@@ -4,8 +4,10 @@ import com.bestteam.myfitroutine.Contain
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 object NetworkClient {
+
 
     val api : NetworkInterface
         get() = instanse.create(NetworkInterface::class.java)
@@ -19,9 +21,5 @@ object NetworkClient {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         }
-
-    fun getInstance() : Retrofit{
-        return  instanse
-    }
 
 }

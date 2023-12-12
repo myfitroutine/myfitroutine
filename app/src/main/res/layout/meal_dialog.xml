@@ -187,7 +187,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            android:background="@drawable/meal_radius2"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView2"
@@ -223,13 +224,25 @@
                 android:id="@+id/meal_dialog_total_cal_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234 Kcal"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_cal"
+                app:layout_constraintEnd_toStartOf="@+id/textView11"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_cal" />" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kcal"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_cal_num"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_cal" />
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_cal_num" />
 
             <TextView
                 android:id="@+id/meal_dialog_total_carbohydrate"
@@ -249,7 +262,7 @@
                 android:id="@+id/meal_dialog_total_carbohydrate_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_carbohydrate"
@@ -275,7 +288,7 @@
                 android:id="@+id/meal_dialog_total_protein_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_protein"
@@ -301,7 +314,7 @@
                 android:id="@+id/meal_dialog_total_fat_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_fat"

@@ -3,30 +3,35 @@ package com.bestteam.myfitroutine.Dialog
 import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bestteam.myfitroutine.Adapter.MealDialogSearchAdapter
 import com.bestteam.myfitroutine.Contain
+import com.bestteam.myfitroutine.Model.MealData
+import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
 import com.bestteam.myfitroutine.R
-import com.bestteam.myfitroutine.Utils
 import com.bestteam.myfitroutine.ViewModel.MealViewModel
 import com.bestteam.myfitroutine.databinding.MealDialogBinding
 import com.bestteam.myfitroutine.retrofit.NetworkClient.api
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MealPlusDialog : DialogFragment() {
 
     private lateinit var binding : MealDialogBinding
     private lateinit var viewModel : MealViewModel
-    private lateinit var adapter : MealDialogSearchAdapter
+    private lateinit var searchAdapter : MealDialogSearchAdapter
     private lateinit var mealContext : Context
     private lateinit var gridLayoutManager: StaggeredGridLayoutManager
+    private var searchData : ArrayList<Meal_Adapter_Data> = ArrayList()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -38,14 +43,9 @@ class MealPlusDialog : DialogFragment() {
 
         binding = MealDialogBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(MealViewModel::class.java)
-//        viewModel.getMealData()
 
-//        viewModel.searchResult.observe(this, Observer {
-//
-//            setupView()
-//            setupListeners()
-//
-//        })
+        setupView()
+        setupListeners()
 
         return binding.root
     }
@@ -88,24 +88,64 @@ class MealPlusDialog : DialogFragment() {
     private fun setupView(){
         gridLayoutManager = StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL)
         binding.rvSearch.layoutManager = gridLayoutManager
-        adapter = MealDialogSearchAdapter(mealContext)
-        binding.rvSearch.adapter = adapter
+        searchAdapter = MealDialogSearchAdapter(mealContext)
+        binding.rvSearch.adapter = searchAdapter
         binding.rvSearch.itemAnimator = null
     }
 
     private fun setupListeners(){
         binding.searchImage.setOnClickListener {
-            val query = binding.mealEditText.text.toString()
-            if(query.isNotEmpty()){
-                Utils.saveRecentSearch(requireContext(), query)
-                searchMealResult(query)
+            val desc_kor = binding.mealEditText.text.toString()
+            if (desc_kor.isNotEmpty()){
+
+                fetchSearchResults(desc_kor)
             }
-            else{
-                Toast.makeText(mealContext, "검색어를 입력해 주세요.", Toast.LENGTH_SHORT).show()
-            }
+            else Toast.makeText(mealContext, "검색어를 입력해 주세요.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun searchMealResult(query : String){
+    private fun fetchSearchResults(desc_kor:String){
+
+        viewModel.fetchSearchResults(desc_kor)
+        viewModel.searchData.observe(viewLifecycleOwner) { searchData ->
+            this.searchData.clear()
+            this.searchData.addAll(searchData)
+            searchAdapter.dataSet = this.searchData
+            searchAdapter.notifyDataSetChanged()
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            Log.e("fetchSearchResults", errorMessage)
+            Toast.makeText(mealContext, "원하는 검색어가 없습니다.", Toast.LENGTH_SHORT).show()
+        }
+
+//        api.getMeal(desc_kor,1,100,"","", Contain.AUTH).enqueue(object : Callback<MealData>{
+//            override fun onResponse(call: Call<MealData>, response: Response<MealData>) {
+//                response.body()?.mealBody.let {
+//                    Log.d("response","response : ${response.body()?.mealBody?.mealItems}")
+//
+//                    searchData.clear()
+//                    if (response.isSuccessful){
+//                        response.body()?.mealBody?.mealItems?.forEach {
+//                            val title = it.DESC_KOR
+//                            val calorie = it.NUTR_CONT1
+//                            searchData.add(Meal_Adapter_Data(title,calorie))
+//                        }
+//                    }
+//                    else {
+//                        Log.e("fetchSearchResults", "Error: ${response.code()} - ${response.message()}")
+//                    }
+//                }
+//                searchAdapter.dataSet = searchData
+//                searchAdapter.notifyDataSetChanged()
+//            }
+//
+//            override fun onFailure(call: Call<MealData>, t: Throwable) {
+//                Log.e("fetchSearchResults", "Failure: ${t.message}")
+//                Toast.makeText(mealContext, "원하는 검색어가 없습니다.", Toast.LENGTH_SHORT).show()
+//            }
+//
+//        })
+
     }
 }
