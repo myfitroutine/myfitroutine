@@ -3,4 +3,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reduce">감량</string>
+    <string name="filted_date"><u>날짜로 검색하기</u></string>
 </resources>

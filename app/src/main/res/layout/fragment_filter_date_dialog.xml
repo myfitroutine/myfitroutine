@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Dialog.TodayWeightDialog">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -35,45 +36,52 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/txt_weekly"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="일주일"
-            android:textSize="15sp"
-            android:layout_marginStart="20dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView">
 
-        <TextView
-            android:id="@+id/txt_monthly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginStart="20dp"
-            android:text="한달"
-            app:layout_constraintStart_toEndOf="@+id/txt_weekly"
-            app:layout_constraintTop_toTopOf="@+id/txt_weekly" />
+            <TextView
+                android:id="@+id/txt_weekly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:text="일주일"
+                android:gravity="center"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/txt_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginStart="20dp"
-            android:text="일년"
-            app:layout_constraintStart_toEndOf="@+id/txt_monthly"
-            app:layout_constraintTop_toTopOf="@+id/txt_monthly" />
+            <TextView
+                android:id="@+id/txt_monthly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="한달"
+                android:gravity="center"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/txt_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginStart="20dp"
-            android:text="전체"
-            app:layout_constraintStart_toEndOf="@+id/txt_year"
-            app:layout_constraintTop_toTopOf="@+id/txt_year" />
+            <TextView
+                android:id="@+id/txt_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="일년"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txt_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:text="전체"
+                android:gravity="center"
+                android:textSize="20sp" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

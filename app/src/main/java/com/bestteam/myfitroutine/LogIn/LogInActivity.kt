@@ -22,6 +22,8 @@ class LogInActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        val currentUser = auth?.currentUser
+
         val signUpButton = binding.loginSignupButton
         signUpButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -40,6 +42,11 @@ class LogInActivity : AppCompatActivity() {
             } else if (password.isEmpty()){
                 Toast.makeText(this,"비밀번호를 입력해주세요.",Toast.LENGTH_LONG).show()
             }
+        }
+        if (currentUser != null) {
+            val mainIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainIntent)
+            finish()
         }
     }
 
