@@ -2,9 +2,7 @@ package com.bestteam.myfitroutine.Model
 
 import com.google.gson.annotations.SerializedName
 
-data class MealData (val response: mealRseponse)
-
-data class mealRseponse(
+data class MealData(
     @SerializedName("body")
     val mealBody: MealBody,
     @SerializedName("header")
@@ -16,7 +14,7 @@ data class MealBody(
     val pageNo: Int,
     val totalCount: Int,
     @SerializedName("items")
-    val mealItems: MutableList<MealItem>
+    val mealItems: MutableList<mealItem>
 )
 
 data class MealHeader(
@@ -24,7 +22,7 @@ data class MealHeader(
     val resultMsg: String
 )
 
-data class MealItem(
+data class mealItem(
     val DESC_KOR: String,
     val SERVING_WT: String,
     val NUTR_CONT1: String,

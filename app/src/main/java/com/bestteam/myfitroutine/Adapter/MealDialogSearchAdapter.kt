@@ -2,16 +2,14 @@ package com.bestteam.myfitroutine.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bestteam.myfitroutine.Model.MealData
-import com.bestteam.myfitroutine.Model.MealItem
+import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
 import com.bestteam.myfitroutine.databinding.MealDialogSearchItemBinding
 
 class MealDialogSearchAdapter(val context: Context) : RecyclerView.Adapter<MealDialogSearchAdapter.ViewHolder>() {
 
-    var dataSet = ArrayList<MealItem>()
+    var dataSet = ArrayList<Meal_Adapter_Data>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealDialogSearchAdapter.ViewHolder {
 
@@ -24,8 +22,8 @@ class MealDialogSearchAdapter(val context: Context) : RecyclerView.Adapter<MealD
 
         val meal = dataSet[position]
 
-        holder.searchText.text = meal.DESC_KOR
-        holder.searchCalorie.text = meal.NUTR_CONT1
+        holder.searchText.text = meal.title
+        holder.searchCalorie.text = meal.calorie
 
     }
 
