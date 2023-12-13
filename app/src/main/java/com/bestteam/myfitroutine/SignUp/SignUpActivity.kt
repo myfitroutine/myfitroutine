@@ -5,13 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.bestteam.myfitroutine.LogIn.LogInActivity
-import com.bestteam.myfitroutine.R
-import com.bestteam.myfitroutine.databinding.ActivityLoginBinding
 import com.bestteam.myfitroutine.databinding.ActivitySignupBinding
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -43,7 +40,6 @@ class SignUpActivity : AppCompatActivity() {
         val name = binding.signupName.text.toString()
         val male = binding.signupMaleBox.isChecked
         val female = binding.signupFemaleBox.isChecked
-
 
         if (email.isEmpty()) {
             binding.signupEmail.error = "이메일을 입력해주세요."
@@ -89,7 +85,6 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this, "키, 몸무게, 나이는 숫자로 입력해주세요.", Toast.LENGTH_LONG).show()
             return false
         }
-
         return true
     }
 
@@ -101,7 +96,6 @@ class SignUpActivity : AppCompatActivity() {
         return text.any {
             it in specialWord
         }
-
     }
 
     private fun isValidPassword(pw: String): Boolean {

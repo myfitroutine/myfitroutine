@@ -12,303 +12,333 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#003566"
-        android:padding="10dp"
-        android:text="오늘의 식단"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/meal_dialog_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="분류"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/meal_dialog_type_breakfast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/meal_radius2"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="5dp"
-        android:text="아침"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_lunch"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type" />
-
-    <TextView
-        android:id="@+id/meal_dialog_type_lunch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/meal_radius2"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="5dp"
-        android:text="점심"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_breakfast"
-        app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_dinner"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_breakfast"
-        app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_breakfast" />
-
-    <TextView
-        android:id="@+id/meal_dialog_type_dinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/meal_radius2"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="5dp"
-        android:text="저녁"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_lunch"
-        app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_etc"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_lunch"
-        app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_lunch" />
-
-    <TextView
-        android:id="@+id/meal_dialog_type_etc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/meal_radius2"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="5dp"
-        android:text="그 외"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_dinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_dinner"
-        app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_dinner" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="20dp"
-        android:background="#D9D9D9"
-        app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type_breakfast"
-        tools:layout_editor_absoluteX="16dp" />
-
-    <TextView
-        android:id="@+id/meal_dialog_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="음식종류"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <TextView
-        android:id="@+id/meal_dialog_category_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="탄 : 탄수화물, 단 : 단백질, 지 : 지방"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_category"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/meal_radius2"
-        android:paddingVertical="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/meal_dialog_category"
-        tools:layout_editor_absoluteX="20dp">
-
-        <EditText
-            android:id="@+id/meal_editText"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/meal_dialog_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            android:hint="검색하기"
-            android:paddingHorizontal="10dp"
+            android:background="#003566"
+            android:padding="10dp"
+            android:text="오늘의 식단"
             android:textAlignment="center"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/btn_dialog_cancel"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/btn_dialog_cancel"
+            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_title"
+            app:layout_constraintEnd_toEndOf="@+id/meal_dialog_title"
+            app:layout_constraintTop_toTopOf="@+id/meal_dialog_title" />
+
+        <TextView
+            android:id="@+id/meal_dialog_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="분류"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_title" />
+
+        <TextView
+            android:id="@+id/meal_dialog_type_breakfast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/meal_radius2"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="아침"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_lunch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type" />
+
+        <TextView
+            android:id="@+id/meal_dialog_type_lunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/meal_radius2"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="점심"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_breakfast"
+            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_dinner"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_breakfast"
+            app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_breakfast" />
+
+        <TextView
+            android:id="@+id/meal_dialog_type_dinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/meal_radius2"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="저녁"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_lunch"
+            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_etc"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_lunch"
+            app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_lunch" />
+
+        <TextView
+            android:id="@+id/meal_dialog_type_etc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/meal_radius2"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="그 외"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_dinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_dinner"
+            app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_dinner" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:background="#D9D9D9"
+            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type_breakfast"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <TextView
+            android:id="@+id/meal_dialog_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="음식종류"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
+            android:id="@+id/meal_dialog_category_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/btn_search"
-            app:layout_constraintBottom_toBottomOf="@+id/meal_editText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/meal_editText" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView2">
-
-        <TextView
-            android:id="@+id/meal_dialog_total_cal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="총 열량 : "
+            android:text="탄 : 탄수화물, 단 : 단백질, 지 : 지방"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_cal_num"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            android:textSize="12sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_category"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/meal_radius2"
+            android:paddingVertical="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_category"
+            tools:layout_editor_absoluteX="20dp">
+
+            <EditText
+                android:id="@+id/meal_editText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:hint="검색하기"
+                android:paddingHorizontal="10dp"
+                android:textAlignment="center"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toStartOf="@+id/search_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/search_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/btn_search"
+                app:layout_constraintBottom_toBottomOf="@+id/meal_editText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/meal_editText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            android:background="@drawable/meal_radius2"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_search" />
 
-        <TextView
-            android:id="@+id/meal_dialog_total_cal_num"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout7"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1234 Kcal"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_cal"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView2">
+
+            <TextView
+                android:id="@+id/meal_dialog_total_cal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="총 열량 : "
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_cal_num"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_cal_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_cal"
+                app:layout_constraintEnd_toStartOf="@+id/textView11"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_cal" />" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kcal"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_cal_num"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_cal_num" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_carbohydrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="탄 : "
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_carbohydrate_num"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/meal_dialog_total_cal" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_carbohydrate_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_carbohydrate"
+                app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_protein"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_carbohydrate" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_protein"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="단 : "
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_total_carbohydrate"
+                app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_protein_num"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_carbohydrate_num"
+                app:layout_constraintTop_toTopOf="@+id/meal_dialog_total_carbohydrate" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_protein_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_protein"
+                app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_fat"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_protein" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_fat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="지 : "
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_total_protein"
+                app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_fat_num"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_protein_num"
+                app:layout_constraintTop_toTopOf="@+id/meal_dialog_total_protein" />
+
+            <TextView
+                android:id="@+id/meal_dialog_total_fat_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_fat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_fat" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/meal_dialog_plus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/login_signup_button"
+            android:text="입력하기"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_cal" />
-
-        <TextView
-            android:id="@+id/meal_dialog_total_carbohydrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="탄 : "
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_carbohydrate_num"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_total_cal" />
-
-        <TextView
-            android:id="@+id/meal_dialog_total_carbohydrate_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1234"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_carbohydrate"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_protein"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_carbohydrate" />
-
-        <TextView
-            android:id="@+id/meal_dialog_total_protein"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="단 : "
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_total_carbohydrate"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_protein_num"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_carbohydrate_num"
-            app:layout_constraintTop_toTopOf="@+id/meal_dialog_total_carbohydrate" />
-
-        <TextView
-            android:id="@+id/meal_dialog_total_protein_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1234"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_protein"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_fat"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_protein" />
-
-        <TextView
-            android:id="@+id/meal_dialog_total_fat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="지 : "
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_total_protein"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_total_fat_num"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_protein_num"
-            app:layout_constraintTop_toTopOf="@+id/meal_dialog_total_protein" />
-
-        <TextView
-            android:id="@+id/meal_dialog_total_fat_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1234"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/meal_dialog_total_fat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_total_fat" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/meal_dialog_plus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/login_signup_button"
-        android:text="입력하기"
-        android:textColor="@color/white"
-        android:textSize="28sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

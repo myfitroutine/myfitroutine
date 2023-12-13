@@ -22,6 +22,8 @@ class LogInActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        val currentUser = auth?.currentUser
+
         val signUpButton = binding.loginSignupButton
         signUpButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -41,13 +43,18 @@ class LogInActivity : AppCompatActivity() {
                 Toast.makeText(this,"비밀번호를 입력해주세요.",Toast.LENGTH_LONG).show()
             }
         }
+        if (currentUser != null) {
+            val mainIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainIntent)
+            finish()
+        }
     }
 
     private fun signIn(email: String, password: String) {
         auth?.signInWithEmailAndPassword(email, password)
             ?.addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
                     val mainIntent = Intent(this, MainActivity::class.java)
                     startActivity(mainIntent)
                     finish()

@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bestteam.myfitroutine.Dialog.FilterDateDialog
+import com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog
 import com.bestteam.myfitroutine.Model.WeightData
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.ViewModel.GraphViewModel
@@ -26,8 +27,10 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.launch
 
+@Suppress("UNREACHABLE_CODE")
 class GraphFragment : Fragment() {
     private lateinit var binding: FragmentGraghBinding
     private lateinit var viewModel: GraphViewModel
@@ -59,6 +62,31 @@ class GraphFragment : Fragment() {
             val filterDateDialog = FilterDateDialog()
             filterDateDialog.show(childFragmentManager, "filterDateDialog")
         }
+
+        val goalWeight = binding.txtGoalWeight
+        val goalWeightGap = binding.txtGapGaolWeight
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeight()
+            viewModel.goalWeight.collect { goal ->
+                if (goal != null) {
+                    goalWeight.text = goal.toString() + "KG"
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeightGap()
+            viewModel.goaweightGap.collect { goalGap ->
+                if (goalGap != null) {
+                    goalWeightGap.text = goalGap.toString() + "KG"
+                }
+            }
+        }
+        binding.btnSetGoal.setOnClickListener {
+            val getGoalWeightDialog = GetGoalWeightDialog()
+            getGoalWeightDialog.show(childFragmentManager, "getGoalWeight")
+        }
     }
 
     private fun setUpChart() {
@@ -73,6 +101,12 @@ class GraphFragment : Fragment() {
             granularity = 1f
             axisMinimum = 1f
             isGranularityEnabled = true
+            // X축 라인의 색상을 Black으로 설정
+
+            axisLineColor = Color.BLACK
+            // x축 라인 두께
+
+            axisLineWidth = 1f
         }
 
         lineChart.apply {
@@ -88,12 +122,24 @@ class GraphFragment : Fragment() {
             // X축 라벨을 표시하지 않음
             xAxis.setDrawLabels(false)
 
+            // 왼쪽 Y축 라벨을 표시하지 않음
+            axisLeft.setDrawLabels(false)
+
+            // 왼쪽 Y축 라인의 색상을 Black으로 설정
+            axisLeft.axisLineColor = Color.BLACK
+            // y축 라인 두께
+            axisLeft.axisLineWidth = 1f
             // 범례 비활성화
             legend.isEnabled = false
 
+            // Description Label 비활성화
+            description.isEnabled = false
+
             // 체중의 최대값을 가져와서 Y축의 최대값으로 설정
-            val maxWeight = viewModel.weights.value?.maxByOrNull { it.weight }?.weight ?: 50f
-            axisLeft.axisMaximum = maxWeight as Float + 100f
+            val maxWeight =
+                viewModel.weights.value?.maxByOrNull { it.weight }?.weight?.toFloat() ?: 50f
+            axisLeft.axisMaximum = maxWeight + 100f
+            axisLeft.axisMinimum = maxWeight - 30f
 
             legend.apply {
                 textSize = 25f
@@ -109,10 +155,9 @@ class GraphFragment : Fragment() {
         val entries = mutableListOf<Entry>()
         Log.d("nyh", "updateChart: $weights")
 
-
         weights.forEachIndexed { index, weightData ->
             entries.add(
-               Entry(
+                Entry(
                     index.toFloat(),
                     weightData.weight.toFloat()
                 )
@@ -121,16 +166,23 @@ class GraphFragment : Fragment() {
 
         val dataSet = LineDataSet(entries, "Weight Data").apply {
             // 선 및 점의 컬러 설정
-            color = Color.YELLOW
-            setCircleColor(Color.YELLOW)
-            circleHoleColor = Color.YELLOW
+//            color = Color.parseColor("#FFC300")
+            setCircleColor(Color.parseColor("#FFC300"))
+
 
             // 점의 크기 및 테두리 설정
             setCircleSize(8f)
             setDrawCircleHole(true)
             circleHoleRadius = 4f
 
+////             선택 시 라인 하이라이트
+//            setHighlightEnabled(true)
+//            highLightColor = Color.RED
+//            highlightLineWidth = 1f
+
+
             // 선 비활성화
+            lineWidth = 0f
             setDrawValues(false)
             setDrawIcons(false)
         }
@@ -147,9 +199,9 @@ class GraphFragment : Fragment() {
         lineChart.marker = mv
 
         // 클릭 시 빨간색 테두리 추가
-        dataSet.highLightColor = Color.RED
+//        dataSet.highLightColor = Color.RED
 
-        // 그래프 갱신
+//         그래프 갱신
         lineChart.invalidate()
     }
 
@@ -165,7 +217,23 @@ class GraphFragment : Fragment() {
             return label
         }
     }
+
+    fun updateUI() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeight()
+            viewModel.goalWeight.collect { goal ->
+                binding.txtGoalWeight.text = goal.toString() + "KG"
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getGoalWeightGap()
+            viewModel.goaweightGap.collect { goalGap ->
+                binding.txtGapGaolWeight.text = goalGap.toString() + " KG"
+            }
+        }
+    }
 }
+
 class XYMarkerView(
     context: Context,
     private val xAxisDates: List<String>
@@ -177,7 +245,7 @@ class XYMarkerView(
         if (e != null) {
             val index = e.x.toInt()
             val label = if (index >= 0 && index < xAxisDates.size) {
-                "${xAxisDates[index]} \n 몸무게: ${e.y}"
+                "${xAxisDates[index]} / ${e.y}Kg"
             } else {
                 "몸무게: ${e.y}"
             }
