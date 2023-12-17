@@ -93,14 +93,14 @@ class MainFragment : Fragment() {
             }
         }
 
-        val editTextToday = binding.btnTodayWeight
-        val editToday: String? = todayWeight.text.toString()
-
-        if (editToday.isNullOrEmpty()) {
-            editTextToday.text = "입력하기"
-        } else {
-            editTextToday.text = "수정하기"
-        }
+//        val editTextToday = binding.btnTodayWeight
+//        val editToday: String? = todayWeight.text.toString()
+//
+//        if (editToday.isNullOrEmpty() || editToday == "0" ) {
+//            editTextToday.text = "입력하기"
+//        } else {
+//            editTextToday.text = "수정하기"
+//        }
 
         todayWeight.setOnClickListener {
             val todayWeightDialog = TodayWeightDialog()

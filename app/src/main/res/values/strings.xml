@@ -3,5 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reduce">감량</string>
-    <string name="filted_date"><u>날짜로 검색하기</u></string>
+    <string name="filted_date"><u>날짜로 검색 하기</u></string>
+    <string name="today_weight"><u>입력 하기</u></string>
+    <string name="graph"><u>자세히 보기</u></string>
+    <string name="goal_weight"><u>목표 몸무게 수정</u></string>
 </resources>

@@ -3,4 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainblue">#003566</color>
+    <color name="back_orange">#F07F5E</color>
+    <color name="button_orange">#F15223</color>
+    <color name="box_orange">#FFDFD5</color>
+    <color name="title_gray">#2B2B2B</color>
+    <color name="middle_title_gray">#575757</color>
+    <color name="question_gray">#8D8D8D</color>
 </resources>
