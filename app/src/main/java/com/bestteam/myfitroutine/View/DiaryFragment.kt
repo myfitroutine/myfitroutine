@@ -1,55 +1,67 @@
 package com.bestteam.myfitroutine.View
 
 
-import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bestteam.myfitroutine.Adapter.DiaryDateRecyclerViewAdapter
-import com.bestteam.myfitroutine.Adapter.DiaryTodayTodoAdapter
-import com.bestteam.myfitroutine.Model.DiaryData
+import com.bestteam.myfitroutine.Adapter.DiaryTodoRecyclerViewAdapter
+import com.bestteam.myfitroutine.Dialog.TodoAddDialog
 import com.bestteam.myfitroutine.Model.Todo
-import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.databinding.FragmentDiaryBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class DiaryFragment : Fragment() {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private var auth: FirebaseAuth? = null
+    private val db = Firebase.firestore
+    private lateinit var Diaryadapter: DiaryTodoRecyclerViewAdapter
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
-
-        val diaryDataList = mutableListOf<DiaryData>(
-            DiaryData("2023-12-13", listOf(Todo("첫번째 할일",true),Todo("두번째할일",false),Todo("세번째할일",true))),
-            DiaryData("2023-12-14", listOf(Todo("첫번째 할일",true),Todo("두번째할일",false),Todo("세번째할일")))
-        )
+        auth = FirebaseAuth.getInstance()
+        Log.d("uid", auth!!.uid.toString())
+        var diaryDataList = mutableListOf<Todo>()
+        db.collection("${auth!!.uid!!}")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    diaryDataList.add(
+                                Todo(
+                                    "${document.data["context"]}",
+                                    "${document.data["date"]}"
+                                )
+                            )
+                }
+                Diaryadapter = DiaryTodoRecyclerViewAdapter(diaryDataList)
+                binding.diaryRecyclerView.adapter = Diaryadapter
+                binding.diaryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("파이어", "Error getting documents: ", exception)
+            }
 
         binding.diaryNextTargetBtn.setOnClickListener {
-            val todoDialogView = layoutInflater.inflate(R.layout.dialog_target_diary, null)
-            val recyclerViewTargetDiary: RecyclerView = todoDialogView.findViewById(R.id.nextTarget_recyclerView)
-            val adapter = DiaryTodayTodoAdapter(diaryDataList[0].todos)
-            recyclerViewTargetDiary.adapter = adapter
-            recyclerViewTargetDiary.layoutManager = LinearLayoutManager(requireContext())
-
-            val todoDialog = AlertDialog.Builder(requireActivity())
-                .setView(todoDialogView)
-                .create()
-            todoDialog.show()
+            val dialog = TodoAddDialog()
+            dialog.show(childFragmentManager,"TodoAddDialog")
         }
-
-
-
-        val adapter = DiaryDateRecyclerViewAdapter(diaryDataList)
-        binding.diaryRecyclerView.adapter = adapter
-        binding.diaryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.diaryBackBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
         return binding.root
     }
@@ -57,5 +69,7 @@ class DiaryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
     }
 }
+
