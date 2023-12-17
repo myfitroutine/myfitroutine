@@ -166,14 +166,13 @@ class GraphFragment : Fragment() {
 
         val dataSet = LineDataSet(entries, "Weight Data").apply {
             // 선 및 점의 컬러 설정
-//            color = Color.parseColor("#FFC300")
+            color = Color.parseColor("#FFC300")
             setCircleColor(Color.parseColor("#FFC300"))
 
 
             // 점의 크기 및 테두리 설정
-            setCircleSize(8f)
-            setDrawCircleHole(true)
-            circleHoleRadius = 4f
+            setCircleSize(7f)
+//            setDrawCircleHole(true)
 
 ////             선택 시 라인 하이라이트
 //            setHighlightEnabled(true)
