@@ -6,6 +6,6 @@ data class DiaryData(
 )
 
 data class Todo(
-    val content: String,
-    val check:Boolean = false
+    val context: String = "할일을 작성하세요",
+    val date:String
 )
