@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
+        android:visibility="gone"
         android:text="@string/filted_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -65,25 +66,28 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
+        android:layout_marginTop="30dp"
         android:layout_width="0dp"
-        android:layout_height="350dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_set_goal"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_graph_back"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="목표 몸무게 수정하기"
-        android:textColor="@color/white"
+        android:text="돌아가기"
+        android:textSize="20sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
-        android:background="@drawable/login_signup_button"
+        android:background="@drawable/btn_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -93,37 +97,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="목표 몸무게까지,"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        android:text="목표 몸무게까지"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
     <TextView
         android:id="@+id/txt_gap_gaol_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:textColor="@color/black"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/view3"
+        android:layout_marginStart="10dp"
+        android:textColor="#FFC300"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kg 남았습니다!"
+        android:layout_marginStart="10dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/txt_gap_gaol_weight"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/btn_set_goal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/goal_weight"
+        android:textColor="#8A8A8A"
+        android:textSize="12sp"
+        android:layout_marginEnd="25dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_gap_gaol_weight" />
+
+
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="15dp"
         android:background="@drawable/login_signup_button"
         android:orientation="horizontal"
-        android:paddingStart="20dp"
+        android:paddingStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:paddingTop="5dp"
-        android:paddingEnd="20dp"
+        android:paddingEnd="10dp"
         android:paddingBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lineChart">
+        app:layout_constraintTop_toTopOf="@+id/login_background">
 
         <TextView
             android:id="@+id/textView3"
@@ -143,16 +171,6 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#D9D9D9"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_set_goal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
@@ -171,6 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="7일" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -178,28 +197,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:background="@android:color/transparent"
+            android:text="14일" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:background="@android:color/transparent"
+            android:text="1개월" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:background="@android:color/transparent"
+            android:text="3개월" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:background="@android:color/transparent"
+            android:text="1년" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
