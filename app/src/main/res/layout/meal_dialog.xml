@@ -45,72 +45,75 @@
             android:text="분류"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/meal_dialog_title" />
 
-        <TextView
-            android:id="@+id/meal_dialog_type_breakfast"
-            android:layout_width="wrap_content"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/meal_radius2"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="5dp"
-            android:text="아침"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_lunch"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type" />
-
-        <TextView
-            android:id="@+id/meal_dialog_type_lunch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/meal_radius2"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="5dp"
-            android:text="점심"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_breakfast"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_dinner"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_breakfast"
-            app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_breakfast" />
-
-        <TextView
-            android:id="@+id/meal_dialog_type_dinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/meal_radius2"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="5dp"
-            android:text="저녁"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_lunch"
-            app:layout_constraintEnd_toStartOf="@+id/meal_dialog_type_etc"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_lunch"
-            app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_lunch" />
-
-        <TextView
-            android:id="@+id/meal_dialog_type_etc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/meal_radius2"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="5dp"
-            android:text="그 외"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/meal_dialog_type_dinner"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:chipSpacingHorizontal="15dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/meal_dialog_type_dinner"
-            app:layout_constraintTop_toTopOf="@+id/meal_dialog_type_dinner" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/meal_dialog_type_breakfast"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아침"
+                android:textColor="@color/chip_check_text"
+                android:textSize="16sp"
+                app:chipBackgroundColor="@color/chip_check_background"
+                app:chipStartPadding="15dp"
+                app:chipEndPadding="15dp"
+                app:chipMinHeight="40dp"/>
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:id="@+id/meal_dialog_type_lunch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinHeight="40dp"
+                app:chipStartPadding="15dp"
+                app:chipEndPadding="15dp"
+                app:chipBackgroundColor="@color/chip_check_background"
+                android:textColor="@color/chip_check_text"
+                android:textSize="16sp"
+                android:text="점심" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:id="@+id/meal_dialog_type_dinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinHeight="40dp"
+                app:chipStartPadding="15dp"
+                app:chipEndPadding="15dp"
+                app:chipBackgroundColor="@color/chip_check_background"
+                android:textColor="@color/chip_check_text"
+                android:textSize="16sp"
+                android:text="저녁" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:id="@+id/meal_dialog_type_etc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipMinHeight="40dp"
+                app:chipStartPadding="15dp"
+                app:chipEndPadding="15dp"
+                app:chipBackgroundColor="@color/chip_check_background"
+                android:textColor="@color/chip_check_text"
+                android:textSize="16sp"
+                android:text="그 외" />
+
+        </com.google.android.material.chip.ChipGroup>
 
         <View
             android:id="@+id/view"
@@ -119,7 +122,7 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="20dp"
             android:background="#D9D9D9"
-            app:layout_constraintTop_toBottomOf="@+id/meal_dialog_type_breakfast"
+            app:layout_constraintTop_toBottomOf="@+id/chip_group"
             tools:layout_editor_absoluteX="16dp" />
 
         <TextView
@@ -131,6 +134,7 @@
             android:text="음식종류"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -191,7 +195,7 @@
             android:background="@drawable/meal_radius2"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView2"
+            android:id="@+id/rv_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -205,7 +209,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView2">
+            app:layout_constraintTop_toBottomOf="@+id/rv_result">
 
             <TextView
                 android:id="@+id/meal_dialog_total_cal"

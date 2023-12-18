@@ -88,6 +88,7 @@
             app:layout_constraintStart_toEndOf="@+id/rv_dialog_fat" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/rv_dialog_result_delete"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/btn_delete"
