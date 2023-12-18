@@ -2,14 +2,19 @@ package com.bestteam.myfitroutine.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
 import com.bestteam.myfitroutine.databinding.MealDialogSearchItemBinding
-
-class MealDialogSearchAdapter(val context: Context) : RecyclerView.Adapter<MealDialogSearchAdapter.ViewHolder>() {
+class MealDialogSearchAdapter(val context: Context, val dataset : ArrayList<Meal_Adapter_Data> ) : RecyclerView.Adapter<MealDialogSearchAdapter.ViewHolder>() {
 
     var dataSet = ArrayList<Meal_Adapter_Data>()
+
+    interface ItemClick{
+        fun onClick(view: View, position: Int)
+    }
+    var itemClick : ItemClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealDialogSearchAdapter.ViewHolder {
 
@@ -23,7 +28,10 @@ class MealDialogSearchAdapter(val context: Context) : RecyclerView.Adapter<MealD
         val meal = dataSet[position]
 
         holder.searchText.text = meal.title
-        holder.searchCalorie.text = meal.calorie
+        holder.searchCalorie.text = meal.calorie.toString()
+        holder.searchLayout.setOnClickListener {
+            itemClick?.onClick(it,position)
+        }
 
     }
 
@@ -31,10 +39,10 @@ class MealDialogSearchAdapter(val context: Context) : RecyclerView.Adapter<MealD
         return dataSet.size
     }
 
-    inner class ViewHolder(binding: MealDialogSearchItemBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(binding: MealDialogSearchItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         var searchText = binding.mealDialogSearchText
         var searchCalorie = binding.mealDialogSearchCal
-
+        var searchLayout = binding.searchItemLayout
     }
 }
