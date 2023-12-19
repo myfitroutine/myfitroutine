@@ -36,7 +36,7 @@ class DiaryFragment : Fragment() {
         Log.d("uid", auth!!.uid.toString())
         var diaryDataList = mutableListOf<Todo>()
         db.collection("${auth!!.uid!!}")
-            .get()
+            .document("일지").collection("일지").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     diaryDataList.add(

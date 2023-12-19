@@ -34,6 +34,8 @@ class TodoAddDialog:DialogFragment() {
             val onlyDate = LocalDate.now().toString()
             var todo = Todo(context = addText.text.toString(), date = onlyDate)
             db.collection("${auth!!.uid!!}")
+                .document("일지")
+                .collection("일지")
                 .document(onlyDate)
                 .set(todo)
                 .addOnCompleteListener {
