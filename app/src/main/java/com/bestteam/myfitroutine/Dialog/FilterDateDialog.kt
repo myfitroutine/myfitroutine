@@ -23,7 +23,7 @@ class FilterDateDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFilterDateDialogBinding.inflate(inflater, container, false)
-
+        
         return binding.root
     }
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Dialog.TodayWeightDialog">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,7 +14,7 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/mainblue"
+            android:background="@color/back_orange"
             android:gravity="center"
             android:text="오늘의 몸무게는?"
             android:textColor="@color/white"
