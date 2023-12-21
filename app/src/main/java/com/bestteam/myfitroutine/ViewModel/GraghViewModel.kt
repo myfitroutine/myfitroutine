@@ -56,5 +56,4 @@ class GraphViewModel (private val repository : MainRepository):ViewModel(){
             _goalWeightGap.value = goalWeightsGap
         }
     }
-
 }

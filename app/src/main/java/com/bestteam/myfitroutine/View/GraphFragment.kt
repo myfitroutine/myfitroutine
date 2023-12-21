@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bestteam.myfitroutine.Dialog.FilterDateDialog
@@ -35,6 +36,7 @@ class GraphFragment : Fragment() {
     private lateinit var binding: FragmentGraghBinding
     private lateinit var viewModel: GraphViewModel
     private lateinit var lineChart: LineChart
+    private var selectedButton: AppCompatButton? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +53,48 @@ class GraphFragment : Fragment() {
         lineChart = binding.lineChart
         viewModel = ViewModelProvider(this).get(GraphViewModel::class.java)
 
+        val btnWeekly = binding.btnWeekly
+        val btn14days = binding.btn14days
+        val btnMonthly = binding.btnMonthly
+        val btn3Monthly = binding.btn3monthly
+        val btnYear = binding.btnYear
+        val buttons = listOf(btnWeekly, btn14days, btnMonthly, btn3Monthly, btnYear)
+
+        buttons.forEach { button ->
+            button.setOnClickListener {
+                onButtonClick(button, buttons)
+            }
+        }
+//
+//        btnWeekly.setOnClickListener {
+//            viewModel.filterDataByPeriod(7)
+//            btnWeekly.setTextColor(Color.WHITE)
+//            btnWeekly.setBackgroundResource(R.drawable.login_signup_button)
+//        }
+//        btn14days.setOnClickListener {
+//            viewModel.filterDataByPeriod(14)
+//            btn14days.setTextColor(Color.WHITE)
+//            btn14days.setBackgroundResource(R.drawable.login_signup_button)
+//        }
+//        btnMonthly.setOnClickListener {
+//            viewModel.filterDataByPeriod(30)
+//            btnMonthly.setTextColor(Color.WHITE)
+//            btnMonthly.setBackgroundResource(R.drawable.login_signup_button)
+//        }
+//        btn3Monthly.setOnClickListener {
+//            viewModel.filterDataByPeriod(90)
+//            btn3Monthly.setTextColor(Color.WHITE)
+//            btn3Monthly.setBackgroundResource(R.drawable.login_signup_button)
+//        }
+//        btnYear.setOnClickListener {
+//            viewModel.filterDataByPeriod(365)
+//            btnYear.setTextColor(Color.WHITE)
+//            btnYear.setBackgroundResource(R.drawable.login_signup_button)
+//        }
+
+        binding.btnGraphBack.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getAllWeight()
             viewModel.weights.collect { weights ->
@@ -86,6 +130,41 @@ class GraphFragment : Fragment() {
         binding.btnSetGoal.setOnClickListener {
             val getGoalWeightDialog = GetGoalWeightDialog()
             getGoalWeightDialog.show(childFragmentManager, "getGoalWeight")
+        }
+    }
+
+    private fun onButtonClick(clickedButton: AppCompatButton, allButtons: List<AppCompatButton>) {
+
+        if (selectedButton != clickedButton) {
+
+            selectedButton?.let {
+                it.setTextColor(Color.BLACK)
+                it.setBackgroundResource(android.R.color.transparent)
+            }
+
+            clickedButton.setTextColor(Color.WHITE)
+            clickedButton.setBackgroundResource(R.drawable.login_signup_button)
+
+            selectedButton = clickedButton
+
+            allButtons.filter { it != selectedButton }.forEach { button ->
+                button.setTextColor(Color.BLACK)
+                button.setBackgroundResource(android.R.color.transparent)
+            }
+
+            viewModel.filterDataByPeriod(getPeriodForButton(clickedButton))
+        }
+    }
+
+    private fun getPeriodForButton(button: AppCompatButton): Int {
+
+        return when (button.id) {
+            R.id.btn_weekly -> 7
+            R.id.btn_14days -> 14
+            R.id.btn_monthly -> 30
+            R.id.btn_3monthly -> 90
+            R.id.btn_year -> 365
+            else -> 7
         }
     }
 
