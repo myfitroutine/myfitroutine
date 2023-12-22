@@ -16,7 +16,7 @@
             android:id="@+id/meal_dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#003566"
+            android:background="@color/button_orange"
             android:padding="10dp"
             android:text="오늘의 식단"
             android:textAlignment="center"
