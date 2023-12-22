@@ -87,9 +87,11 @@ class GraphFragment : Fragment() {
             viewModel.getGoalWeight()
             viewModel.goalWeight.collect { goal ->
                 if (goal != null) {
+                    Log.d("nyh", "onViewCreated: getgoalWeight $goal ")
                     goalWeight.text = goal.toString() + " KG"
                 } else {
                     goalWeight.text = "?" + " KG"
+                    Log.d("nyh", "onViewCreated: getgoalWeight $goal ")
                 }
             }
         }

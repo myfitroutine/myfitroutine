@@ -136,12 +136,15 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
             val snapshot = document.get().await()
 
             if (snapshot.exists() && snapshot.contains("goalWeight")) {
-                val goalWeight = snapshot.getString("goalWeight")
-                Log.d("nyh", "getGoalWeight: $goalWeight")
-                return goalWeight ?.toInt()
+                val goalWeight = snapshot.getLong("goalWeight")?.toInt()
+                Log.d("nyh", "getGoalWeight repo: $goalWeight")
+                return goalWeight
+            } else {
+                Log.d("nyh", "getGoalWeight: repo notfound")
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("nyh", "Error getgoalWeight ${e.message}")
         }
 
         return null

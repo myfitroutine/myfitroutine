@@ -47,12 +47,14 @@ class GraphViewModel (private val repository : MainRepository):ViewModel(){
     fun getGoalWeight() {
         viewModelScope.launch {
             val goalWeights = repository.getGoalWeight()
+            Log.d("nyh", "getGoalWeight:viewmodel goalWeight $goalWeights ")
             _goalWeight.value = goalWeights
         }
     }
     fun getGoalWeightGap() {
         viewModelScope.launch {
             val goalWeightsGap = repository.getGoalWeightGap()
+            Log.d("nyh", "getGoalWeightGap: viewmodel gapgoal $goalWeightsGap")
             _goalWeightGap.value = goalWeightsGap
         }
     }
