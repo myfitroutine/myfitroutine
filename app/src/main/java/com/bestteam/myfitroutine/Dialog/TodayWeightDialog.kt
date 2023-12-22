@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +21,7 @@ import com.bestteam.myfitroutine.ViewModel.MainViewModel
 import com.bestteam.myfitroutine.databinding.FragmentTodayWeightDialogBinding
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import java.lang.NumberFormatException
 
 
 class TodayWeightDialog : DialogFragment() {
@@ -40,11 +43,16 @@ class TodayWeightDialog : DialogFragment() {
         viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         binding.btnConfirm.setOnClickListener {
-            val todayWeightText = binding.editText.text.toString()
-            val todayWeight = if (todayWeightText.isNotEmpty()) todayWeightText.toInt() else 0
             val userUid = auth.currentUser?.uid.toString()
+            val todayWeightText = binding.getTodayWeight.text.toString()
 
-            lifecycleScope.launch { // lifecycleScope.launch를 사용하여 코루틴 시작
+            if (todayWeightText.isEmpty() || !todayWeightText.isDigitsOnly() || todayWeightText.toInt() == 0) {
+                Toast.makeText(requireContext(), "오늘의 체중을 입력해 주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val todayWeight = if (todayWeightText.isNotEmpty()) todayWeightText.toInt() else 0
+
+            lifecycleScope.launch {
                 val yearMonthDay = viewModel.getRepository().getCurrentDate()
 
                 val weight = WeightData(userUid, todayWeight, yearMonthDay)
@@ -60,6 +68,7 @@ class TodayWeightDialog : DialogFragment() {
                 }
             }
         }
+        isCancelable = false
     }
 
     override fun onResume() {
@@ -67,11 +76,12 @@ class TodayWeightDialog : DialogFragment() {
 
 
         //디바이스 크기 구하기
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager =
+            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
-        val params : ViewGroup.LayoutParams? = dialog?.window?.attributes
+        val params: ViewGroup.LayoutParams? = dialog?.window?.attributes
         val deviceWidth = size.x
         val deviceHeigh = size.y
 
@@ -83,6 +93,7 @@ class TodayWeightDialog : DialogFragment() {
         //다이얼로그 모서리 둥글게 하기
         dialog?.window?.setBackgroundDrawableResource(R.drawable.meal_dialog_shape)
     }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         (parentFragment as? MainFragment)?.onResume()

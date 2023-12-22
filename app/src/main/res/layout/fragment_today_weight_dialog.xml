@@ -23,15 +23,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <EditText
-            android:id="@+id/editText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="오늘의 체중을 입력 해 주세요!"
+            android:id="@+id/get_today_weight"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/login_signup_blank"
+            android:paddingStart="10dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KG"
+            android:layout_marginStart="15dp"
+            android:textSize="50sp"
+            app:layout_constraintBottom_toBottomOf="@+id/get_today_weight"
+            app:layout_constraintStart_toEndOf="@+id/get_today_weight"
+            app:layout_constraintTop_toTopOf="@+id/get_today_weight">
+
+        </TextView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_confirm"

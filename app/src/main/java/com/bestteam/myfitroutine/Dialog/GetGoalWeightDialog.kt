@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.DialogFragment
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.View.GraphFragment
@@ -39,9 +41,14 @@ class GetGoalWeightDialog : DialogFragment() {
 
         binding.btnConfirm.setOnClickListener {
             if (userUid != null) {
+                val goalWeightText = binding.editText.text.toString()
+                if (goalWeightText.isEmpty() || !goalWeightText.isDigitsOnly() || goalWeightText.toInt() == 0) {
+                    Toast.makeText(requireContext(), "목표 체중을 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                val goalWeight = goalWeightText.toInt()
                 val collection = fireStore.collection("UserData")
                 val document = collection.document(userUid)
-                val goalWeight = binding.editText.text.toString()
                 val userData = hashMapOf("goalWeight" to goalWeight)
 
                 document.update(userData as Map<String, Any>)
@@ -53,17 +60,18 @@ class GetGoalWeightDialog : DialogFragment() {
                     }
             }
         }
+        isCancelable = false
     }
+
     override fun onResume() {
         super.onResume()
-
-
         //디바이스 크기 구하기
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager =
+            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
-        val params : ViewGroup.LayoutParams? = dialog?.window?.attributes
+        val params: ViewGroup.LayoutParams? = dialog?.window?.attributes
         val deviceWidth = size.x
         val deviceHeigh = size.y
 
@@ -75,6 +83,7 @@ class GetGoalWeightDialog : DialogFragment() {
         //다이얼로그 모서리 둥글게 하기
         dialog?.window?.setBackgroundDrawableResource(R.drawable.meal_dialog_shape)
     }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         val graphFragment = parentFragment as? GraphFragment

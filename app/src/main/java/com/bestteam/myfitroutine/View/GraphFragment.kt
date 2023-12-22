@@ -1,5 +1,6 @@
 package com.bestteam.myfitroutine.View
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -12,7 +13,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.bestteam.myfitroutine.Dialog.FilterDateDialog
 import com.bestteam.myfitroutine.Dialog.GetGoalWeightDialog
 import com.bestteam.myfitroutine.Model.WeightData
 import com.bestteam.myfitroutine.R
@@ -28,7 +28,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.launch
 
 @Suppress("UNREACHABLE_CODE")
@@ -48,6 +47,7 @@ class GraphFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lineChart = binding.lineChart
@@ -65,46 +65,19 @@ class GraphFragment : Fragment() {
                 onButtonClick(button, buttons)
             }
         }
-//
-//        btnWeekly.setOnClickListener {
-//            viewModel.filterDataByPeriod(7)
-//            btnWeekly.setTextColor(Color.WHITE)
-//            btnWeekly.setBackgroundResource(R.drawable.login_signup_button)
-//        }
-//        btn14days.setOnClickListener {
-//            viewModel.filterDataByPeriod(14)
-//            btn14days.setTextColor(Color.WHITE)
-//            btn14days.setBackgroundResource(R.drawable.login_signup_button)
-//        }
-//        btnMonthly.setOnClickListener {
-//            viewModel.filterDataByPeriod(30)
-//            btnMonthly.setTextColor(Color.WHITE)
-//            btnMonthly.setBackgroundResource(R.drawable.login_signup_button)
-//        }
-//        btn3Monthly.setOnClickListener {
-//            viewModel.filterDataByPeriod(90)
-//            btn3Monthly.setTextColor(Color.WHITE)
-//            btn3Monthly.setBackgroundResource(R.drawable.login_signup_button)
-//        }
-//        btnYear.setOnClickListener {
-//            viewModel.filterDataByPeriod(365)
-//            btnYear.setTextColor(Color.WHITE)
-//            btnYear.setBackgroundResource(R.drawable.login_signup_button)
-//        }
 
-        binding.btnGraphBack.setOnClickListener {
+        val btnGraphBack = binding.btnGraphBack
+            btnGraphBack.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
+            btnGraphBack.setTextColor(Color.WHITE)
+            btnGraphBack.setBackgroundResource(R.drawable.login_signup_button)
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getAllWeight()
             viewModel.weights.collect { weights ->
                 updateChart(weights)
             }
-        }
-
-        binding.btnSetDate.setOnClickListener {
-            val filterDateDialog = FilterDateDialog()
-            filterDateDialog.show(childFragmentManager, "filterDateDialog")
         }
 
         val goalWeight = binding.txtGoalWeight
@@ -114,7 +87,9 @@ class GraphFragment : Fragment() {
             viewModel.getGoalWeight()
             viewModel.goalWeight.collect { goal ->
                 if (goal != null) {
-                    goalWeight.text = goal.toString() + "KG"
+                    goalWeight.text = goal.toString() + " KG"
+                } else {
+                    goalWeight.text = "?" + " KG"
                 }
             }
         }
@@ -123,11 +98,16 @@ class GraphFragment : Fragment() {
             viewModel.getGoalWeightGap()
             viewModel.goaweightGap.collect { goalGap ->
                 if (goalGap != null) {
-                    goalWeightGap.text = goalGap.toString() + "KG"
+                    goalWeightGap.text = goalGap.toString()
+                } else {
+                    goalWeightGap.text = "?"
                 }
             }
         }
-        binding.btnSetGoal.setOnClickListener {
+
+        val btnSetGoal = binding.btnSetGoal
+        btnSetGoal.setOnClickListener {
+            Log.d("nyh", "onViewCreated: touched ")
             val getGoalWeightDialog = GetGoalWeightDialog()
             getGoalWeightDialog.show(childFragmentManager, "getGoalWeight")
         }
