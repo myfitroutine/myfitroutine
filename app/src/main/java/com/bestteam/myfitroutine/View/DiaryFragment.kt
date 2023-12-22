@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestteam.myfitroutine.Adapter.DiaryTodoRecyclerViewAdapter
 import com.bestteam.myfitroutine.Dialog.TodoAddDialog
@@ -57,6 +59,7 @@ class DiaryFragment : Fragment() {
         binding.diaryNextTargetBtn.setOnClickListener {
             val dialog = TodoAddDialog()
             dialog.show(childFragmentManager,"TodoAddDialog")
+            getFragmentManager()?.let { it1 -> refreshFragment(this, it1) }
         }
         binding.diaryBackBtn.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
@@ -64,6 +67,11 @@ class DiaryFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
+        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+        ft.detach(fragment).attach(fragment).commit()
     }
 
     override fun onDestroyView() {
