@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/diary_nextTarget_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/diary_back_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
