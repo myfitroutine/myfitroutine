@@ -6,5 +6,5 @@ class Meal_Adapter_Data (
     var resultCarbohydrate : Double,
     var resultProtein : Double,
     var resultFat : Double,
-    var resultCountNum : Int
+    var resultCountNum : Int,
 )
