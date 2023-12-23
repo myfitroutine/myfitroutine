@@ -7,4 +7,6 @@
     <string name="today_weight"><u>입력 하기</u></string>
     <string name="graph"><u>자세히 보기</u></string>
     <string name="goal_weight"><u>목표 몸무게 수정</u></string>
+    <string name="sign_up"><u>계정이 없으신가요?</u></string>
+    <string name="find"><u>아이디/비밀번호 찾기</u></string>
 </resources>

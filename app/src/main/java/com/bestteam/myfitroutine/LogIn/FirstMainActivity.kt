@@ -24,11 +24,11 @@ class FirstMainActivity : AppCompatActivity() {
 
         val goLoginPG = binding.startButton
         val currentUser = auth?.currentUser
-        goLoginPG.setOnClickListener {
 
+        goLoginPG.setOnClickListener {
             val intent = Intent(this, LogInActivity::class.java)
             startActivity(intent)
-
+            goLoginPG.setBackgroundResource(R.drawable.login_signup_button)
         }
         if (currentUser != null) {
             val mainIntent = Intent(this, MainActivity::class.java)
