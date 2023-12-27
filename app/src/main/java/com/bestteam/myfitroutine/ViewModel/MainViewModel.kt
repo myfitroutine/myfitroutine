@@ -12,6 +12,7 @@ import com.bestteam.myfitroutine.View.MainFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -33,6 +34,9 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
 
     private val _currentUserName = MutableStateFlow<String?>(null)
     val currentUserName: StateFlow<String?> get() = _currentUserName
+
+    private val _selectedAvata = MutableStateFlow<String>("")
+    val selectedAvata: StateFlow<String> get() = _selectedAvata
 
     fun addWeight(weight: WeightData){
         viewModelScope.launch {
@@ -96,6 +100,12 @@ class MainViewModel(private val repository : MainRepository) : ViewModel() {
             repository.getUserName()?.let {
                 _currentUserName.value = it
             }
+        }
+    }
+    fun updateSelectedAvata(avataName: String?) {
+        avataName?.let {
+            _selectedAvata.value = it
+            Log.d("nyh", "updateSelectedAvata:viewmodel ${_selectedAvata.value} ")
         }
     }
 }

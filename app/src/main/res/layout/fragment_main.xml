@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="@+id/login_background" />
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/avata"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/avata_1"
@@ -384,6 +384,14 @@
             app:layout_constraintTop_toTopOf="@+id/imageView11" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/icn_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintEnd_toEndOf="@+id/imageView10" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
