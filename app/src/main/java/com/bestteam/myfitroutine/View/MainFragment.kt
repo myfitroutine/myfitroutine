@@ -3,7 +3,6 @@ package com.bestteam.myfitroutine.View
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -13,24 +12,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bestteam.myfitroutine.Adapter.YoutubeAdapter
 import com.bestteam.myfitroutine.Dialog.AvataDialog
 import com.bestteam.myfitroutine.Dialog.TodayWeightDialog
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.Util.CustomToast
 import com.bestteam.myfitroutine.ViewModel.MainViewModel
 import com.bestteam.myfitroutine.databinding.FragmentMainBinding
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.onEach
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @Suppress("UNREACHABLE_CODE", "DEPRECATION")
+
+@AndroidEntryPoint
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var weightViewModel: MainViewModel
     private lateinit var avataImageView: ImageView
+    private lateinit var mContext: Context
+    private lateinit var adapter: YoutubeAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +53,9 @@ class MainFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = YoutubeAdapter(mContext)
+        mContext = requireContext()
 
         weightViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         weightViewModel.setGoalWeight(requireActivity())
@@ -154,6 +165,17 @@ class MainFragment : Fragment() {
                 loadAndSetAvataImage()
             }
         }
+        binding.rcvYoutube.layoutManager =
+            LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
+        binding.rcvYoutube.adapter = adapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            weightViewModel.getVideo()
+            weightViewModel.videoList.collect { videoList ->
+                adapter.videoItems = videoList.toMutableList()
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onResume() {
@@ -207,13 +229,13 @@ class MainFragment : Fragment() {
                 }
             }
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             weightViewModel.selectedAvata.collect { avataName ->
                 Log.d("nyh", "Collected Avata: $avataName")
                 loadAndSetAvataImage()
             }
         }
-
     }
 
     fun loadAndSetAvataImage() {

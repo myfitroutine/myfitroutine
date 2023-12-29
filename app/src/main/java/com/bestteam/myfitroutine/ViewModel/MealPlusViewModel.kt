@@ -29,6 +29,9 @@ class MealPlusViewModel() : ViewModel() {
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
+    private val _mealTypeText = MutableLiveData<String>()
+    val mealTypeText: LiveData<String> get() = _mealTypeText
+
     private val networkInterface = NetworkClient.api
 
     fun fetchSearchResults(desc_kor: String) {
@@ -50,4 +53,8 @@ class MealPlusViewModel() : ViewModel() {
             }
         })
     }
+    fun setMealTypeText(mealType: String) {
+        _mealTypeText.value = mealType
+    }
+
 }
