@@ -14,6 +14,11 @@ class MealDialogResultAdapter(val context : Context, var listener:ButtonClick) :
 
     var resultDataSet = ArrayList<Meal_Adapter_Data>()
 
+    fun clearItem(){
+        resultDataSet.clear()
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealDialogResultAdapter.ViewHolder {
 
         val binding = MealDialogResultItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,9 +31,9 @@ class MealDialogResultAdapter(val context : Context, var listener:ButtonClick) :
         val mealResult = resultDataSet[position]
 
         holder.resultTitle.text = mealResult.title
-        holder.resultCarbohydrate.text = "${mealResult.resultCarbohydrate}"
-        holder.resultProtein.text = mealResult.resultProtein.toString()
-        holder.resultFat.text = mealResult.resultFat.toString()
+        holder.resultCarbohydrate.text = mealResult.resultCarbohydrate.toInt().toString()
+        holder.resultProtein.text = mealResult.resultProtein.toInt().toString()
+        holder.resultFat.text = mealResult.resultFat.toInt().toString()
         holder.resultCountNum.text = mealResult.resultCountNum.toString()
 
     }
@@ -37,17 +42,17 @@ class MealDialogResultAdapter(val context : Context, var listener:ButtonClick) :
         return resultDataSet.size
     }
 
-    inner class ViewHolder(bindig: MealDialogResultItemBinding) : RecyclerView.ViewHolder(bindig.root){
+    inner class ViewHolder(binding: MealDialogResultItemBinding) : RecyclerView.ViewHolder(binding.root){
 
-        var resultTitle = bindig.rvDialogMenu
-        var resultCarbohydrate = bindig.rvDialogCarbohydrateNum
-        var resultProtein = bindig.rvDialogProteinNum
-        var resultFat = bindig.rvDialogFatNum
+        var resultTitle = binding.rvDialogMenu
+        var resultCarbohydrate = binding.rvDialogCarbohydrateNum
+        var resultProtein = binding.rvDialogProteinNum
+        var resultFat = binding.rvDialogFatNum
 
-        var resultDelete = bindig.rvDialogResultDelete
-        var btnPlus = bindig.rvDialogPlus
-        var btnMinus = bindig.rvDialogMinus
-        var resultCountNum = bindig.rvDialogCountNum
+        private var resultDelete = binding.rvDialogResultDelete
+        private var btnPlus = binding.rvDialogPlus
+        private var btnMinus = binding.rvDialogMinus
+        var resultCountNum = binding.rvDialogCountNum
 
 
         init {

@@ -28,7 +28,7 @@ class MealDialogSearchAdapter(val context: Context, val dataset : ArrayList<Meal
         val meal = dataSet[position]
 
         holder.searchText.text = meal.title
-        holder.searchCalorie.text = meal.calorie.toString()
+        holder.searchCalorie.text = meal.calorie.toInt().toString()
         holder.searchLayout.setOnClickListener {
             itemClick?.onClick(it,position)
         }

@@ -17,6 +17,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.GsonBuilder
+import java.lang.StringBuilder
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -50,14 +52,22 @@ class MealFragment : Fragment() {
             dialog.show(childFragmentManager,"MealPlusDialog")
         }
 
-        getTodayMeal()
-
         binding.btnBack.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        getTodayMeal()
+        getBeforeOneDayMeal()
+        getBeforeTwoDayMeal()
+
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+
     }
     private fun getTodayMeal(){
         todayMealData.clear()
@@ -79,10 +89,10 @@ class MealFragment : Fragment() {
                 for (document in result){
                     val value = gson.toJson(document.data)
                     val resultFormat = gson.fromJson(value, TotalNumData::class.java)
-                    val docId = "${document.id} , "
+                    val docId = "${document.id} & "
                     todayMealData.add(resultFormat)
                     a += docId
-                    binding.rvTodayBreakfast.text = a
+                    binding.rvTodayBreakfast.text = a.dropLast(3)
                 }
             }
 
@@ -105,10 +115,10 @@ class MealFragment : Fragment() {
                 for (document in result){
                     val value = gson.toJson(document.data)
                     val resultFormat = gson.fromJson(value, TotalNumData::class.java)
-                    val docId = "${document.id} , "
+                    val docId = "${document.id} & "
                     todayMealData.add(resultFormat)
                     b += docId
-                    binding.rvTodayLunch.text = b
+                    binding.rvTodayLunch.text = b.dropLast(3)
                 }
             }
 
@@ -130,10 +140,10 @@ class MealFragment : Fragment() {
                 for (document in result){
                     val value = gson.toJson(document.data)
                     val resultFormat = gson.fromJson(value, TotalNumData::class.java)
-                    val docId = "${document.id} , "
+                    val docId = "${document.id} & "
                     todayMealData.add(resultFormat)
                     c += docId
-                    binding.rvTodayDinner.text = c
+                    binding.rvTodayDinner.text = c.dropLast(3)
                 }
             }
 
@@ -155,10 +165,11 @@ class MealFragment : Fragment() {
                 for (document in result){
                     val value = gson.toJson(document.data)
                     val resultFormat = gson.fromJson(value, TotalNumData::class.java)
-                    val docId = "${document.id} , "
+                    val docId = "${document.id} & "
                     todayMealData.add(resultFormat)
                     d += docId
-                    binding.rvTodayEtc.text = d
+
+                    binding.rvTodayEtc.text = d.dropLast(3)
                 }
             }
 
@@ -174,15 +185,150 @@ class MealFragment : Fragment() {
 
         totalCalQuery.document("dailyNum").get()
             .addOnSuccessListener {
+                val decimalFormat = DecimalFormat("#,###")
+
                 val totalCal = it.getLong("dailyCalorieSum")
                 val totalCar = it.getLong("dailyCarbohydrateSum")
                 val totalPro = it.getLong("dailyProteinSum")
                 val totalFat = it.getLong("dailyFateSum")
 
-                binding.totalCalorieNum.text = totalCal.toString()
-                binding.mealGraph1.text = totalCar.toString()
-                binding.mealGraph2.text = totalPro.toString()
-                binding.mealGraph3.text = totalFat.toString()
+                if (totalCal != null){
+                    binding.totalCalorieNum.text = decimalFormat.format(totalCal)
+                } else binding.totalCalorieNum.text = "0"
+                if (totalCar != null){
+                    binding.mealGraph1.text = decimalFormat.format(totalCar)
+                } else binding.mealGraph1.text = "0"
+                if (totalPro != null){
+                    binding.mealGraph2.text = decimalFormat.format(totalPro)
+                } else binding.mealGraph2.text = "0"
+                if (totalFat != null){
+                    binding.mealGraph3.text = decimalFormat.format(totalFat)
+                } else binding.mealGraph3.text = "0"
+
+            }
+    }
+
+    private fun getBeforeOneDayMeal(){
+        todayMealData.clear()
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -1)
+        val beforeOneDay = calendar.time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(beforeOneDay)
+
+        val mealTypeQuery = db.collection("$uid").document(dateFormat)
+
+        binding.date.text = dateFormat
+
+        //아침
+        mealTypeQuery.collection("아침").get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                var a = ""
+                for (document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, TotalNumData::class.java)
+                    val docId = "${document.id} & "
+                    todayMealData.add(resultFormat)
+                    a += docId
+                    binding.rvBreakfast.text = a.dropLast(3)
+                }
+            }
+
+
+        //점심
+        mealTypeQuery.collection("점심").get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                var b = ""
+                for (document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, TotalNumData::class.java)
+                    val docId = "${document.id} & "
+                    todayMealData.add(resultFormat)
+                    b += docId
+                    binding.rvLunch.text = b.dropLast(3)
+                }
+            }
+
+        //저녁
+        mealTypeQuery.collection("저녁").get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                var c = ""
+                for (document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, TotalNumData::class.java)
+                    val docId = "${document.id} & "
+                    todayMealData.add(resultFormat)
+                    c += docId
+                    binding.rvDinner.text = c.dropLast(3)
+                }
+            }
+    }
+
+    private fun getBeforeTwoDayMeal(){
+        todayMealData.clear()
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -2)
+        val beforeTwoDay = calendar.time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(beforeTwoDay)
+
+        val mealTypeQuery = db.collection("$uid").document(dateFormat)
+
+        binding.date2.text = dateFormat
+
+        //아침
+        mealTypeQuery.collection("아침").get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                var a = ""
+                for (document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, TotalNumData::class.java)
+                    val docId = "${document.id} & "
+                    todayMealData.add(resultFormat)
+                    a += docId
+                    binding.rvBreakfast.text = a.dropLast(3)
+                }
+            }
+
+
+        //점심
+        mealTypeQuery.collection("점심").get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                var b = ""
+                for (document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, TotalNumData::class.java)
+                    val docId = "${document.id} & "
+                    todayMealData.add(resultFormat)
+                    b += docId
+                    binding.rvLunch.text = b.dropLast(3)
+                }
+            }
+
+        //저녁
+        mealTypeQuery.collection("저녁").get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                var c = ""
+                for (document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, TotalNumData::class.java)
+                    val docId = "${document.id} & "
+                    todayMealData.add(resultFormat)
+                    c += docId
+                    binding.rvDinner.text = c.dropLast(3)
+                }
             }
     }
 

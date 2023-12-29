@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:text="달걀 1개"
             android:textSize="13sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,12 +32,12 @@
             android:id="@+id/rv_dialog_carbohydrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:text="탄 : "
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/rv_dialog_menu"
-            app:layout_constraintStart_toEndOf="@+id/rv_dialog_menu"
-            app:layout_constraintTop_toTopOf="@+id/rv_dialog_menu" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/rv_dialog_menu"
+            app:layout_constraintTop_toBottomOf="@+id/rv_dialog_menu" />
 
         <TextView
             android:id="@+id/rv_dialog_carbohydrate_num"
