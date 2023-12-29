@@ -8,4 +8,9 @@ object Contain {
     const val PREF = "com.bestteam.myfitroutine.shared_prefs"
 
     const val PREF_KEY = "MEAL_SEARCH_PREF"
+
+    var YOUTUBE_BASE_URL = "https://youtube.googleapis.com/"
+
+    var API_KEY = "AIzaSyB6LQTuxxO_UqyPtss6vgZEDYWH1NZk0Cs"
+
 }
