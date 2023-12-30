@@ -13,11 +13,9 @@ import com.bestteam.myfitroutine.Repository.MainRepository
 import com.bestteam.myfitroutine.Repository.MainRepositoryImpl
 import com.bestteam.myfitroutine.Repository.YoutubeRepository
 import com.bestteam.myfitroutine.View.MainFragment
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -136,7 +134,8 @@ class MainViewModel @Inject constructor(
                                     thumbnails = snippet.thumbnails?.medium?.url ?: "",
                                     title = snippet.title ?: "",
                                     categoryId = snippet.categoryId ?: "",
-                                    videoId = item.id?.videoId ?: ""
+                                    videoId = item.id?.videoId ?: "",
+                                    description = snippet.description ?: ""
                                 )
                             }
                         } ?: emptyList()

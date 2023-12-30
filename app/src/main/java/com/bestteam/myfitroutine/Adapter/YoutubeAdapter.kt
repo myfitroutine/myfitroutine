@@ -29,8 +29,8 @@ class YoutubeAdapter(private val mContext: Context) : RecyclerView.Adapter<Youtu
 
                     val intent = Intent(thumbnails.context, VideoDetailActivity::class.java)
                     intent.putExtra("title", clickItem.title)
-                    intent.putExtra("thumbnails",clickItem.thumbnails)
                     intent.putExtra("videoId",clickItem.videoId)
+                    intent.putExtra("description",clickItem.description)
                     thumbnails.context.startActivity(intent)
                 }
             }
