@@ -252,6 +252,7 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         viewModel.breakfastResultSetting()
         viewModel.resultData.observe(this) { resultData ->
+            this.resultData.clear()
             this.resultData.addAll(resultData)
             Log.e("resultData", "resultData : ${this.resultData}")
             resultAdapter.resultDataSet = this.resultData
