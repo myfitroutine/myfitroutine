@@ -1,9 +1,7 @@
 package com.bestteam.myfitroutine.Dialog
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Point
-import android.icu.text.Transliterator.Position
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,29 +12,19 @@ import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bestteam.myfitroutine.Adapter.MealDialogResultAdapter
 import com.bestteam.myfitroutine.Adapter.MealDialogSearchAdapter
-import com.bestteam.myfitroutine.Contain
-import com.bestteam.myfitroutine.Model.MealData
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
-import com.bestteam.myfitroutine.Model.TotalNumData
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.View.MealFragment
 import com.bestteam.myfitroutine.ViewModel.MealPlusViewModel
 import com.bestteam.myfitroutine.databinding.MealDialogBinding
-import com.bestteam.myfitroutine.retrofit.NetworkClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.GsonBuilder
-import kotlinx.coroutines.tasks.await
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -66,7 +54,7 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
     ): View? {
 
         binding = MealDialogBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(MealPlusViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MealPlusViewModel::class.java]
 
 
         // 검색 기능
@@ -163,10 +151,10 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
                 viewModel.mealSearchItemClick()
 
-                viewModel.searchData.observe(viewLifecycleOwner) {
-                    resultSetupView()
-                    binding.mealEditText.setText("")
-                }
+                searchAdapter.dataSet.clear()
+                binding.mealEditText.setText("")
+
+                resultSetupView()
                 totalCalories()
             }
         }
@@ -212,6 +200,13 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
     }
 
     private fun resultSetupView() {
+        resultData.clear()
+
+//        gridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        binding.rvResult.layoutManager = LinearLayoutManager(mealContext)
+        resultAdapter = MealDialogResultAdapter(mealContext, this)
+        binding.rvResult.adapter = resultAdapter
+
 
         // mealType viewModel로 값 넘기기
         if (binding.mealDialogTypeBreakfast.isChecked) {
@@ -226,49 +221,113 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         viewModel.mealResultSetting()
         viewModel.resultData.observe(this) { resultData ->
-
-            gridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-            binding.rvResult.layoutManager = gridLayoutManager
-            resultAdapter = MealDialogResultAdapter(mealContext, this)
-            binding.rvResult.adapter = resultAdapter
-
             this.resultData.clear()
             this.resultData.addAll(resultData)
-
             Log.e("resultData", "resultData : ${this.resultData}")
             resultAdapter.resultDataSet = this.resultData
             resultAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun chipClick() {
+    private fun breakfastResult(){
+
+        binding.rvResult.layoutManager = LinearLayoutManager(mealContext)
+        resultAdapter = MealDialogResultAdapter(mealContext, this)
+        binding.rvResult.adapter = resultAdapter
 
         resultData.clear()
+        resultAdapter.resultDataSet.clear()
 
-        val breakfast = binding.mealDialogTypeBreakfast
-        val lunch = binding.mealDialogTypeLunch
-        val dinner = binding.mealDialogTypeDinner
-        val etc = binding.mealDialogTypeEtc
+        viewModel.breakfastResultSetting()
+        viewModel.resultData.observe(this) { resultData ->
+            this.resultData.addAll(resultData)
+            Log.e("resultData", "resultData : ${this.resultData}")
+            resultAdapter.resultDataSet = this.resultData
+            resultAdapter.notifyDataSetChanged()
+        }
 
-        breakfast.setOnClickListener {
-            resultData.clear()
-            resultSetupView()
-            totalCalories()
+    }
+    private fun lunchResult(){
+
+        binding.rvResult.layoutManager = LinearLayoutManager(mealContext)
+        resultAdapter = MealDialogResultAdapter(mealContext, this)
+        binding.rvResult.adapter = resultAdapter
+
+        resultData.clear()
+        resultAdapter.resultDataSet.clear()
+
+        viewModel.lunchResultSetting()
+        viewModel.resultData.observe(this) { resultData ->
+            this.resultData.clear()
+            this.resultData.addAll(resultData)
+            Log.e("resultData", "resultData : ${this.resultData}")
+            resultAdapter.resultDataSet = this.resultData
+            resultAdapter.notifyDataSetChanged()
         }
-        lunch.setOnClickListener {
-            resultData.clear()
-            resultSetupView()
-            totalCalories()
+
+    }
+    private fun dinnerResult(){
+
+        binding.rvResult.layoutManager = LinearLayoutManager(mealContext)
+        resultAdapter = MealDialogResultAdapter(mealContext, this)
+        binding.rvResult.adapter = resultAdapter
+
+        viewModel.dinnerResultSetting()
+        viewModel.resultData.observe(this) { resultData ->
+            this.resultData.clear()
+            this.resultData.addAll(resultData)
+            Log.e("resultData", "resultData : ${this.resultData}")
+            resultAdapter.resultDataSet = this.resultData
+            resultAdapter.notifyDataSetChanged()
         }
-        dinner.setOnClickListener {
-            resultData.clear()
-            resultSetupView()
-            totalCalories()
+
+    }
+    private fun etcResult(){
+
+        binding.rvResult.layoutManager = LinearLayoutManager(mealContext)
+        resultAdapter = MealDialogResultAdapter(mealContext, this)
+        binding.rvResult.adapter = resultAdapter
+
+        resultData.clear()
+        resultAdapter.resultDataSet.clear()
+
+        viewModel.etcResultSetting()
+        viewModel.resultData.observe(this) { resultData ->
+            this.resultData.addAll(resultData)
+            Log.e("resultData", "resultData : ${this.resultData}")
+            resultAdapter.resultDataSet = this.resultData
+            resultAdapter.notifyDataSetChanged()
         }
-        etc.setOnClickListener {
-            resultData.clear()
-            resultSetupView()
-            totalCalories()
+
+    }
+
+    private fun chipClick() {
+
+        binding.chipGroup.setOnCheckedChangeListener{ _, checkedId ->
+
+            when(checkedId){
+                R.id.meal_dialog_type_breakfast -> {
+                    breakfastResult()
+                    clickBreakfastChipCalorie()
+                    resultData.clear()
+                }
+                R.id.meal_dialog_type_lunch -> {
+                    lunchResult()
+                    clickLunchChipCalorie()
+                    resultData.clear()
+                }
+                R.id.meal_dialog_type_dinner -> {
+                    dinnerResult()
+                    clickDinnerChipCalorie()
+                    resultData.clear()
+                }
+                R.id.meal_dialog_type_etc -> {
+                    etcResult()
+                    clickEtcChipCalorie()
+                    resultData.clear()
+                }
+            }
+
         }
     }
 
@@ -286,7 +345,9 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         }
 
         viewModel.mealTotalCalorie()
+    }
 
+    private fun clickBreakfastChipCalorie() {
         val totalCal = binding.mealDialogTotalCalNum
         val totalCar = binding.mealDialogTotalCarbohydrateNum
         val totalPro = binding.mealDialogTotalProteinNum
@@ -300,76 +361,119 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         val mealTypeTotalNum = db.collection("$uid").document(dateFormat).collection("totalNum")
 
-        if (binding.mealDialogTypeBreakfast.isChecked) {
-            totalCal.text = "0"
-            totalCar.text = "0"
-            totalPro.text = "0"
-            totalFat.text = "0"
-            mealTypeTotalNum.document("아침 totalNum")
-                .get()
-                .addOnSuccessListener {
-                    if (it.contains("calorieSum") && it.contains("carbohydrateSum") && it.contains("proteinSum") && it.contains(
-                            "fatSum"
-                        )
-                    ) {
-                        val mealTypeCal = it.getLong("calorieSum")
-                        val mealTypeCar = it.getLong("carbohydrateSum")
-                        val mealTypePro = it.getLong("proteinSum")
-                        val mealTypeFat = it.getLong("fatSum")
+        totalCal.text = "0"
+        totalCar.text = "0"
+        totalPro.text = "0"
+        totalFat.text = "0"
+        mealTypeTotalNum.document("아침 totalNum")
+            .get()
+            .addOnSuccessListener {
+                if (it.contains("calorieSum") && it.contains("carbohydrateSum") && it.contains("proteinSum") && it.contains(
+                        "fatSum"
+                    )
+                ) {
+                    val mealTypeCal = it.getLong("calorieSum")
+                    val mealTypeCar = it.getLong("carbohydrateSum")
+                    val mealTypePro = it.getLong("proteinSum")
+                    val mealTypeFat = it.getLong("fatSum")
 
-                        totalCal.text = mealTypeCal.toString()
-                        totalCar.text = mealTypeCar.toString()
-                        totalPro.text = mealTypePro.toString()
-                        totalFat.text = mealTypeFat.toString()
-                    }
+                    totalCal.text = mealTypeCal.toString()
+                    totalCar.text = mealTypeCar.toString()
+                    totalPro.text = mealTypePro.toString()
+                    totalFat.text = mealTypeFat.toString()
                 }
-        } else if (binding.mealDialogTypeLunch.isChecked) {
-            totalCal.text = "0"
-            totalCar.text = "0"
-            totalPro.text = "0"
-            totalFat.text = "0"
-            mealTypeTotalNum.document("점심 totalNum")
-                .get()
-                .addOnSuccessListener {
-                    if (it.contains("calorieSum") && it.contains("carbohydrateSum") && it.contains("proteinSum") && it.contains(
-                            "fatSum"
-                        )
-                    ) {
-                        val mealTypeCal = it.getLong("calorieSum")
-                        val mealTypeCar = it.getLong("carbohydrateSum")
-                        val mealTypePro = it.getLong("proteinSum")
-                        val mealTypeFat = it.getLong("fatSum")
+            }
+    }
 
-                        totalCal.text = mealTypeCal.toString()
-                        totalCar.text = mealTypeCar.toString()
-                        totalPro.text = mealTypePro.toString()
-                        totalFat.text = mealTypeFat.toString()
-                    }
-                }
-        } else if (binding.mealDialogTypeDinner.isChecked) {
-            totalCal.text = "0"
-            totalCar.text = "0"
-            totalPro.text = "0"
-            totalFat.text = "0"
-            mealTypeTotalNum.document("저녁 totalNum")
-                .get()
-                .addOnSuccessListener {
-                    if (it.contains("calorieSum") && it.contains("carbohydrateSum") && it.contains("proteinSum") && it.contains(
-                            "fatSum"
-                        )
-                    ) {
-                        val mealTypeCal = it.getLong("calorieSum")
-                        val mealTypeCar = it.getLong("carbohydrateSum")
-                        val mealTypePro = it.getLong("proteinSum")
-                        val mealTypeFat = it.getLong("fatSum")
+    private fun clickLunchChipCalorie() {
+        val totalCal = binding.mealDialogTotalCalNum
+        val totalCar = binding.mealDialogTotalCarbohydrateNum
+        val totalPro = binding.mealDialogTotalProteinNum
+        val totalFat = binding.mealDialogTotalFatNum
 
-                        totalCal.text = mealTypeCal.toString()
-                        totalCar.text = mealTypeCar.toString()
-                        totalPro.text = mealTypePro.toString()
-                        totalFat.text = mealTypeFat.toString()
-                    }
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        val mealTypeTotalNum = db.collection("$uid").document(dateFormat).collection("totalNum")
+
+        totalCal.text = "0"
+        totalCar.text = "0"
+        totalPro.text = "0"
+        totalFat.text = "0"
+
+        mealTypeTotalNum.document("점심 totalNum")
+            .get()
+            .addOnSuccessListener {
+                if (it.contains("calorieSum") && it.contains("carbohydrateSum") && it.contains("proteinSum") && it.contains(
+                        "fatSum"
+                    )
+                ) {
+                    val mealTypeCal = it.getLong("calorieSum")
+                    val mealTypeCar = it.getLong("carbohydrateSum")
+                    val mealTypePro = it.getLong("proteinSum")
+                    val mealTypeFat = it.getLong("fatSum")
+
+                    totalCal.text = mealTypeCal.toString()
+                    totalCar.text = mealTypeCar.toString()
+                    totalPro.text = mealTypePro.toString()
+                    totalFat.text = mealTypeFat.toString()
                 }
-        } else {
+            }
+    }
+    private fun clickDinnerChipCalorie() {
+        val totalCal = binding.mealDialogTotalCalNum
+        val totalCar = binding.mealDialogTotalCarbohydrateNum
+        val totalPro = binding.mealDialogTotalProteinNum
+        val totalFat = binding.mealDialogTotalFatNum
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        val mealTypeTotalNum = db.collection("$uid").document(dateFormat).collection("totalNum")
+
+        totalCal.text = "0"
+        totalCar.text = "0"
+        totalPro.text = "0"
+        totalFat.text = "0"
+        mealTypeTotalNum.document("저녁 totalNum")
+            .get()
+            .addOnSuccessListener {
+                if (it.contains("calorieSum") && it.contains("carbohydrateSum") && it.contains("proteinSum") && it.contains(
+                        "fatSum"
+                    )
+                ) {
+                    val mealTypeCal = it.getLong("calorieSum")
+                    val mealTypeCar = it.getLong("carbohydrateSum")
+                    val mealTypePro = it.getLong("proteinSum")
+                    val mealTypeFat = it.getLong("fatSum")
+
+                    totalCal.text = mealTypeCal.toString()
+                    totalCar.text = mealTypeCar.toString()
+                    totalPro.text = mealTypePro.toString()
+                    totalFat.text = mealTypeFat.toString()
+                }
+            }
+    }
+    private fun clickEtcChipCalorie(){
+        val totalCal = binding.mealDialogTotalCalNum
+        val totalCar = binding.mealDialogTotalCarbohydrateNum
+        val totalPro = binding.mealDialogTotalProteinNum
+        val totalFat = binding.mealDialogTotalFatNum
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        val mealTypeTotalNum = db.collection("$uid").document(dateFormat).collection("totalNum")
+
             totalCal.text = "0"
             totalCar.text = "0"
             totalPro.text = "0"
@@ -395,8 +499,6 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         }
 
 
-    }
-
     //삭제
     override fun resultMealDelete(position: Int) {
 
@@ -418,8 +520,8 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         viewModel.mealResultDelete(mealContext)
 
         viewModel.resultData.observe(this) {
-            this.resultData.removeAt(position)
-            resultAdapter.resultDataSet = this.resultData
+            resultData.removeAt(position)
+            resultAdapter.resultDataSet = resultData
             resultAdapter.notifyDataSetChanged()
         }
 

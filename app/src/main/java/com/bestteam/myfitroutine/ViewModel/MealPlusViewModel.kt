@@ -3,23 +3,24 @@ package com.bestteam.myfitroutine.ViewModel
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.core.view.isGone
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestteam.myfitroutine.Adapter.MealDialogResultAdapter
 import com.bestteam.myfitroutine.Adapter.MealDialogSearchAdapter
 import com.bestteam.myfitroutine.Contain
+import com.bestteam.myfitroutine.Dialog.MealPlusDialog
 import com.bestteam.myfitroutine.Model.MealData
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
 import com.bestteam.myfitroutine.retrofit.NetworkClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -81,17 +82,19 @@ class MealPlusViewModel() : ViewModel() {
 
         val currentDate = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+        val dateFormat2 = SimpleDateFormat("yyyy-MM-dd , HH:mm:ss", Locale.KOREA).format(currentDate)
 
         val title = searchData?.title
-        val calorie = searchData?.calorie
-        val carbohydrate = searchData?.resultCarbohydrate
-        val protein = searchData?.resultProtein
-        val fat = searchData?.resultFat
+        val calorie = searchData?.calorie?.toInt()
+        val carbohydrate = searchData?.resultCarbohydrate?.toInt()
+        val protein = searchData?.resultProtein?.toInt()
+        val fat = searchData?.resultFat?.toInt()
         val uid = auth?.currentUser?.uid
         val resultCountNum = searchData?.resultCountNum
         val mealTypeText = _mealDialogType.value
 
         val mealResult = hashMapOf(
+            "date" to dateFormat2,
             "title" to title,
             "calorie" to calorie,
             "resultCarbohydrate" to carbohydrate,
@@ -111,10 +114,22 @@ class MealPlusViewModel() : ViewModel() {
                 .addOnFailureListener { e ->
                     Log.w("mealResult", "Error writing document", e)
                 }
+
+            //처음 칼로리 저장
+            db.collection("$uid").document(dateFormat)
+                .collection("originalCal").document(title)
+                .set(mealResult)
+                .addOnFailureListener {
+                    Log.d("mealResult", "DocumentSnapshot successfully written!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("mealResult", "Error writing document", e)
+                }
         }
 
-    }
 
+
+    }
     fun mealResultSetting() = viewModelScope.launch {
 
         auth = Firebase.auth
@@ -127,22 +142,142 @@ class MealPlusViewModel() : ViewModel() {
         if (mealTypeText != null) {
             db.collection("$uid").document(dateFormat)
                 .collection(mealTypeText)
+                .orderBy("date",Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener { result ->
                     val gson = GsonBuilder().create()
+                    val resultList = mutableListOf<Meal_Adapter_Data>()
+
                     for(document in result){
                         val value = gson.toJson(document.data)
                         val resultFormat = gson.fromJson(value, Meal_Adapter_Data::class.java)
-                        _resultData.value = listOf(resultFormat)
+                        resultList.add(resultFormat)
                         Log.d("resultSetup","resultData : ${_resultData.value}")
                         Log.d("resultSetup","document ID : ${document.id}, Data: $value")
                     }
+                    _resultData.value = resultList
                 }
                 .addOnFailureListener {
                     Log.d("resultSetupView","resultData : $_resultData")
                 }
         }
 
+    }
+    fun breakfastResultSetting() = viewModelScope.launch {
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        db.collection("$uid").document(dateFormat)
+            .collection("아침")
+            .orderBy("date",Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                val resultList = mutableListOf<Meal_Adapter_Data>()
+
+                for(document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, Meal_Adapter_Data::class.java)
+                    resultList.add(resultFormat)
+                    Log.d("resultSetup","resultData : ${_resultData.value}")
+                    Log.d("resultSetup","document ID : ${document.id}, Data: $value")
+                }
+                _resultData.value = resultList
+            }
+            .addOnFailureListener {
+                Log.d("resultSetupView","resultData : $_resultData")
+            }
+    }
+    fun lunchResultSetting() = viewModelScope.launch {
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        db.collection("$uid").document(dateFormat)
+            .collection("점심")
+            .orderBy("date",Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                val resultList = mutableListOf<Meal_Adapter_Data>()
+
+                for(document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, Meal_Adapter_Data::class.java)
+                    resultList.add(resultFormat)
+                    Log.d("resultSetup","resultData : ${_resultData.value}")
+                    Log.d("resultSetup","document ID : ${document.id}, Data: $value")
+                }
+                _resultData.value = resultList
+            }
+            .addOnFailureListener {
+                Log.d("resultSetupView","resultData : $_resultData")
+            }
+    }
+    fun dinnerResultSetting() = viewModelScope.launch {
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        db.collection("$uid").document(dateFormat)
+            .collection("저녁")
+            .orderBy("date",Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                val resultList = mutableListOf<Meal_Adapter_Data>()
+
+                for(document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, Meal_Adapter_Data::class.java)
+                    resultList.add(resultFormat)
+                    Log.d("resultSetup","resultData : ${_resultData.value}")
+                    Log.d("resultSetup","document ID : ${document.id}, Data: $value")
+                }
+                _resultData.value = resultList
+            }
+            .addOnFailureListener {
+                Log.d("resultSetupView","resultData : $_resultData")
+            }
+    }
+    fun etcResultSetting() = viewModelScope.launch {
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        db.collection("$uid").document(dateFormat)
+            .collection("그외")
+            .orderBy("date",Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val gson = GsonBuilder().create()
+                val resultList = mutableListOf<Meal_Adapter_Data>()
+
+                for(document in result){
+                    val value = gson.toJson(document.data)
+                    val resultFormat = gson.fromJson(value, Meal_Adapter_Data::class.java)
+                    resultList.add(resultFormat)
+                    Log.d("resultSetup","resultData : ${_resultData.value}")
+                    Log.d("resultSetup","document ID : ${document.id}, Data: $value")
+                }
+                _resultData.value = resultList
+            }
+            .addOnFailureListener {
+                Log.d("resultSetupView","resultData : $_resultData")
+            }
     }
 
     fun mealTotalCalorie() = viewModelScope.launch {
@@ -264,35 +399,31 @@ class MealPlusViewModel() : ViewModel() {
 
         val mealTypeText = _mealDialogType.value
 
-        networkInterface.getMeal(mealTitle,1, 1, "", "", Contain.AUTH).enqueue(object :Callback<MealData>{
-            override fun onResponse(call: Call<MealData>, response: Response<MealData>) {
-                if (response.isSuccessful){
-                    response.body()?.mealBody?.mealItems?.forEach {
+        val query = db.collection("$uid").document(dateFormat).collection("originalCal")
 
-                        val calorie = it.NUTR_CONT1
-                        val carbohydrate = it.NUTR_CONT2
-                        val protein = it.NUTR_CONT3
-                        val fat = it.NUTR_CONT4
+        query.get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot){
 
-                        if (mealTitle != null) {
-                            db.collection("$uid").document(dateFormat)
-                                .collection("$mealTypeText").document(mealTitle)
-                                .update(
-                                    "calorie", FieldValue.increment(calorie.toLong()),
-                                    "resultCarbohydrate", FieldValue.increment(carbohydrate.toLong()),
-                                    "resultProtein", FieldValue.increment(protein.toLong()),
-                                    "resultFat", FieldValue.increment(fat.toLong()),
-                                    "resultCountNum",FieldValue.increment(1)
-                                )
-                        }
+                    val originalCal = document.getLong("calorie")
+                    val originalCar = document.getLong("resultCarbohydrate")
+                    val originalPro = document.getLong("resultProtein")
+                    val originalFat = document.getLong("resultFat")
+
+                    if (mealTitle != null) {
+                        db.collection("$uid").document(dateFormat)
+                            .collection("$mealTypeText").document(mealTitle)
+                            .update(
+                                "calorie", originalCal?.let { FieldValue.increment(it) },
+                                "resultCarbohydrate", originalCar?.let { FieldValue.increment(it) },
+                                "resultProtein", originalPro?.let { FieldValue.increment(it) },
+                                "resultFat", originalFat?.let { FieldValue.increment(it) },
+                                "resultCountNum",FieldValue.increment(1)
+                            )
                     }
+
                 }
             }
-
-            override fun onFailure(call: Call<MealData>, t: Throwable) {
-                Log.e("resultMealEditPlus","resultMealEditPlus error")
-            }
-        })
     }
 
     fun mealResultMinus() = viewModelScope.launch {
@@ -308,35 +439,31 @@ class MealPlusViewModel() : ViewModel() {
 
         val mealTypeText = _mealDialogType.value
 
-        networkInterface.getMeal(mealTitle,1, 1, "", "", Contain.AUTH).enqueue(object :Callback<MealData>{
-            override fun onResponse(call: Call<MealData>, response: Response<MealData>) {
-                if (response.isSuccessful){
-                    response.body()?.mealBody?.mealItems?.forEach {
-                        val calorie = it.NUTR_CONT1
-                        val carbohydrate = it.NUTR_CONT2
-                        val protein = it.NUTR_CONT3
-                        val fat = it.NUTR_CONT4
+        val query = db.collection("$uid").document(dateFormat).collection("originalCal")
 
-                        if (mealTitle != null) {
-                            db.collection("$uid").document(dateFormat)
-                                .collection("$mealTypeText").document(mealTitle)
-                                .update(
-                                    "calorie", FieldValue.increment(-calorie.toLong()),
-                                    "resultCarbohydrate", FieldValue.increment(-carbohydrate.toLong()),
-                                    "resultProtein", FieldValue.increment(-protein.toLong()),
-                                    "resultFat", FieldValue.increment(-fat.toLong()),
-                                    "resultCountNum",FieldValue.increment(-1)
-                                )
-                        }
+        query.get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot){
+
+                    val originalCal = document.getLong("calorie")
+                    val originalCar = document.getLong("resultCarbohydrate")
+                    val originalPro = document.getLong("resultProtein")
+                    val originalFat = document.getLong("resultFat")
+
+                    if (mealTitle != null) {
+                        db.collection("$uid").document(dateFormat)
+                            .collection("$mealTypeText").document(mealTitle)
+                            .update(
+                                "calorie", originalCal?.let { FieldValue.increment(-it) },
+                                "resultCarbohydrate", originalCar?.let { FieldValue.increment(-it) },
+                                "resultProtein", originalPro?.let { FieldValue.increment(-it) },
+                                "resultFat", originalFat?.let { FieldValue.increment(-it) },
+                                "resultCountNum",FieldValue.increment(-1)
+                            )
                     }
+
                 }
             }
-
-            override fun onFailure(call: Call<MealData>, t: Throwable) {
-                Log.e("resultMealEditMinus","resultMealEditMinus error")
-            }
-
-        })
     }
 
     fun btnComplete(context: Context) = viewModelScope.launch {

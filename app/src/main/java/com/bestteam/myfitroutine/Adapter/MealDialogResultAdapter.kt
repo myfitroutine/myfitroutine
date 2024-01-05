@@ -1,16 +1,14 @@
 package com.bestteam.myfitroutine.Adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bestteam.myfitroutine.Dialog.MealPlusDialog
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
 import com.bestteam.myfitroutine.databinding.MealDialogResultItemBinding
 
-class MealDialogResultAdapter(val context : Context, var listener:ButtonClick) : RecyclerView.Adapter<MealDialogResultAdapter.ViewHolder>(){
+class MealDialogResultAdapter(val context: Context, var listener: MealPlusDialog) : RecyclerView.Adapter<MealDialogResultAdapter.ViewHolder>(){
 
     var resultDataSet = ArrayList<Meal_Adapter_Data>()
 
