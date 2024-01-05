@@ -1,6 +1,7 @@
 package com.bestteam.myfitroutine.Dialog
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
@@ -16,15 +17,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bestteam.myfitroutine.Adapter.MealDialogResultAdapter
 import com.bestteam.myfitroutine.Adapter.MealDialogSearchAdapter
+import com.bestteam.myfitroutine.Contain
+import com.bestteam.myfitroutine.Model.MealData
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
+import com.bestteam.myfitroutine.Model.TotalNumData
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.View.MealFragment
 import com.bestteam.myfitroutine.ViewModel.MealPlusViewModel
 import com.bestteam.myfitroutine.databinding.MealDialogBinding
+import com.bestteam.myfitroutine.retrofit.NetworkClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.GsonBuilder
+import kotlinx.coroutines.tasks.await
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
