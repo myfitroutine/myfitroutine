@@ -8,55 +8,56 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import com.bestteam.myfitroutine.Model.Todo
+import com.bestteam.myfitroutine.Adapter.DiaryTodoRecyclerViewAdapter
 import com.bestteam.myfitroutine.R
-import com.bestteam.myfitroutine.View.DiaryFragment
-import com.bestteam.myfitroutine.databinding.DialogEditTargetDiaryBinding
+import com.bestteam.myfitroutine.databinding.DialogDeleteTargetDiaryBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.time.LocalDate
 
-class TodoAddDialog(private val onTodoAdded: (Todo) -> Unit) :DialogFragment() {
+class TodoDeleteDialog(private val date: String, private val adapter: DiaryTodoRecyclerViewAdapter) : DialogFragment() {
 
-    private lateinit var binding: DialogEditTargetDiaryBinding
+    private lateinit var binding: DialogDeleteTargetDiaryBinding
     private var auth: FirebaseAuth? = null
     private val db = Firebase.firestore
-    var diaryDataList = mutableListOf<Todo>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DialogEditTargetDiaryBinding.inflate(inflater,container,false)
+        binding = DialogDeleteTargetDiaryBinding.inflate(inflater, container, false)
         auth = FirebaseAuth.getInstance()
-        var addText = binding.editTargetText
-        binding.nextTargetAddBtn.setOnClickListener {
-            val onlyDate = LocalDate.now().toString()
-            var todo = Todo(context = addText.text.toString(), date = onlyDate)
+        val deleteBtn = binding.DeleteTargetDeleteBtn
+        val cancelBtn = binding.DeleteTargetCancelBtn
+        deleteBtn.setOnClickListener {
             db.collection("${auth!!.uid!!}")
                 .document("일지")
                 .collection("일지")
-                .document(onlyDate)
-                .set(todo)
+                .document(date)
+                .delete()
                 .addOnCompleteListener {
-                    onTodoAdded(todo)
+                    adapter.removeTodo(date) // RecyclerView 업데이트
                 }
+            dismiss()
+        }
+        cancelBtn.setOnClickListener {
             dismiss()
         }
         return binding.root
     }
 
+
     override fun onResume() {
         super.onResume()
 
         //디바이스 크기 구하기
-        val windowManager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager =
+            requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
-        val params : ViewGroup.LayoutParams? = dialog?.window?.attributes
+        val params: ViewGroup.LayoutParams? = dialog?.window?.attributes
         val deviceWidth = size.x
 
         //디바이스 크기의 %로 크기 조정
