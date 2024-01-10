@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#003566"
+    android:background="@color/back_orange"
     tools:context=".LogIn.LogInActivity"
     android:paddingTop="30dp">
 
@@ -14,32 +14,18 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.966"
         app:srcCompat="@drawable/login_background" />
-
-    <TextView
-        android:id="@+id/login_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/notosans_medium"
-        android:gravity="center"
-        android:text="로그인"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/login_background" />
 
     <EditText
         android:id="@+id/login_email"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/login_signup_blank"
         android:fontFamily="sans-serif"
@@ -54,23 +40,23 @@
         android:id="@+id/login_email_tittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="16dp"
         android:text="이메일"
-        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:textColor="#575757"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_text" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
         android:id="@+id/login_pw_tittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="비밀번호"
         android:textSize="16sp"
-        android:textColor="@color/black"
+        android:textColor="#575757"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_email" />
 
@@ -79,7 +65,7 @@
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/login_signup_blank"
         android:fontFamily="sans-serif"
@@ -93,53 +79,51 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/login_button"
-        android:layout_width="370dp"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:fontFamily="@font/notosans_medium"
-        android:text="로그인하기"
-        android:textSize="18sp"
-        android:textColor="@color/white"
         android:background="@drawable/login_signup_button"
-        app:layout_constraintBottom_toBottomOf="@+id/login_background"
+        android:fontFamily="@font/notosans_medium"
+        android:text="로그인"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_pw" />
 
     <TextView
         android:id="@+id/login_signup_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="20dp"
         android:fontFamily="sans-serif"
-        android:text="회원가입하기"
-        android:textColor="#000000"
+        android:text="@string/sign_up"
+        android:layout_marginTop="15dp"
+        android:textColor="#8D8D8D"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_pw" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/notosans_black"
-        android:text="/"
-        app:layout_constraintStart_toEndOf="@+id/login_signup_button"
-        app:layout_constraintTop_toBottomOf="@+id/login_pw" />
+        app:layout_constraintStart_toStartOf="@+id/login_button"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
     <TextView
         android:id="@+id/login_id_pw_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
         android:fontFamily="sans-serif"
-        android:text="아이디 , 비밀번호 찾기"
-        android:textColor="@color/black"
+        android:text="@string/find"
+        android:layout_marginTop="15dp"
+        android:textColor="#8D8D8D"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/login_pw" />
+        app:layout_constraintEnd_toEndOf="@+id/login_button"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="330dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/login_background"
+        app:srcCompat="@drawable/login_txt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

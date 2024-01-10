@@ -47,7 +47,7 @@ class GraphFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lineChart = binding.lineChart
@@ -88,9 +88,9 @@ class GraphFragment : Fragment() {
             viewModel.goalWeight.collect { goal ->
                 if (goal != null) {
                     Log.d("nyh", "onViewCreated: getgoalWeight $goal ")
-                    goalWeight.text = goal.toString() + " KG"
+                    goalWeight.text = goal.toString()
                 } else {
-                    goalWeight.text = "?" + " KG"
+                    goalWeight.text = "?"
                     Log.d("nyh", "onViewCreated: getgoalWeight $goal ")
                 }
             }

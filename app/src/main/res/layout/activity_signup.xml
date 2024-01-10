@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#003566"
+    android:background="@color/back_orange"
     tools:context=".SignUp.SignUpActivity"
     android:paddingTop="30dp">
 
@@ -55,18 +55,17 @@
                 android:gravity="center"
                 android:text="이메일"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
             <EditText
                 android:id="@+id/signup_email"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
-                android:hint="이메일을 입력해주세요."
                 android:padding="13dp"
                 android:textSize="16sp"/>
             <TextView
@@ -77,15 +76,15 @@
                 android:text="비밀번호"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/signup_pw"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
@@ -102,19 +101,18 @@
                 android:text="비밀번호 재확인"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/signup_pw_again"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
-                android:hint="비밀번호를 재확인해주세요."
                 android:inputType="textPassword"
                 android:padding="13dp"
                 android:textSize="16sp"/>
@@ -127,15 +125,15 @@
                 android:text="나이"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/signup_age"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
@@ -151,15 +149,15 @@
                 android:text="키"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/signup_cm"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
@@ -175,15 +173,15 @@
                 android:text="몸무게"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/signup_kg"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
@@ -199,15 +197,15 @@
                 android:text="이름"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/signup_name"
-                android:layout_width="380dp"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/login_signup_blank"
                 android:fontFamily="sans-serif"
@@ -223,13 +221,13 @@
                 android:text="성별"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:textColor="#000000"
+                android:textColor="#575757"
                 android:textSize="16sp" />
 
             <CheckBox
                 android:id="@+id/signup_male_box"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="남성" />
@@ -237,7 +235,6 @@
             <CheckBox
                 android:id="@+id/signup_female_box"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="여성" />
@@ -245,7 +242,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signup_button"
         android:layout_width="370dp"
         android:layout_height="wrap_content"

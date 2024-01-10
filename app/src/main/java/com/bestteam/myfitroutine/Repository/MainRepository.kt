@@ -10,6 +10,7 @@ import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import javax.inject.Inject
 
 interface MainRepository {
     suspend fun addWeight(weight: WeightData)
@@ -26,7 +27,7 @@ interface MainRepository {
     suspend fun getUserName(): String?
 
 }
-class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
+class MainRepositoryImpl @Inject constructor(db: FirebaseFirestore): MainRepository {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val userUid = auth.currentUser?.uid.toString()
@@ -182,3 +183,4 @@ class MainRepositoryImpl (db: FirebaseFirestore): MainRepository {
         return null
     }
 }
+

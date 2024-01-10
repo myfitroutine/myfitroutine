@@ -574,6 +574,8 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
             "저녁"
         } else "그외"
 
+        viewModel.setMealTypeText(mealTypeText)
+
         val mealResult = resultData[position]
         val mealTitle = mealResult.title
 

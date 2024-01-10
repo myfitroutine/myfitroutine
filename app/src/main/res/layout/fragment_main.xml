@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="@+id/login_background" />
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/avata"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/avata_1"
@@ -384,6 +384,48 @@
             app:layout_constraintTop_toTopOf="@+id/imageView11" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/icn_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintEnd_toEndOf="@+id/imageView10" />
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/play_circle"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@+id/btn_meal"
+        app:layout_constraintTop_toBottomOf="@+id/btn_meal" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="오늘의 추천 동영상"
+        android:textSize="16sp"
+        android:textColor="#2B2B2B"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView13"
+        app:layout_constraintStart_toEndOf="@+id/imageView13"
+        app:layout_constraintTop_toTopOf="@+id/imageView13" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_youtube"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

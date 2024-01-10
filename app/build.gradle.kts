@@ -42,6 +42,9 @@ android {
         buildConfig = true
         dataBinding = true
     }
+    kapt {
+        correctErrorTypes = true
+    }
 
 }
 
@@ -53,12 +56,16 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-analytics")
 
-    implementation("com.google.dagger:hilt-android:2.44")
+    implementation("com.google.dagger:hilt-android:2.50")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("androidx.databinding:databinding-runtime:8.2.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.2.0")
 
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 
     implementation ("com.google.firebase:firebase-auth-ktx")
@@ -73,12 +80,24 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    implementation ("com.squareup.moshi:moshi:1.14.0")
+    kapt ("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
+
     // retrofit
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:okhttp:4.10.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:4.0.0")
+    androidTestImplementation("org.mockito:mockito-android:4.0.0")
+
+// Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }
 
 kapt {
