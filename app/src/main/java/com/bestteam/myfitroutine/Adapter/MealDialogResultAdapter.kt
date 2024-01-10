@@ -1,18 +1,34 @@
 package com.bestteam.myfitroutine.Adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bestteam.myfitroutine.Dialog.MealPlusDialog
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
 import com.bestteam.myfitroutine.databinding.MealDialogResultItemBinding
+import okhttp3.internal.notifyAll
 
-class MealDialogResultAdapter(val context : Context, var listener:ButtonClick) : RecyclerView.Adapter<MealDialogResultAdapter.ViewHolder>(){
+class MealDialogResultAdapter(val context: Context, var listener: MealPlusDialog) : RecyclerView.Adapter<MealDialogResultAdapter.ViewHolder>(){
 
-    var resultDataSet = ArrayList<Meal_Adapter_Data>()
+
+    private val differCallback = object :DiffUtil.ItemCallback<Meal_Adapter_Data>(){
+        override fun areItemsTheSame(oldItem: Meal_Adapter_Data, newItem: Meal_Adapter_Data): Boolean {
+            return oldItem.title == newItem.title
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: Meal_Adapter_Data, newItem: Meal_Adapter_Data): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+
+    var resultDataSet = AsyncListDiffer(this,differCallback)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealDialogResultAdapter.ViewHolder {
 
@@ -23,31 +39,31 @@ class MealDialogResultAdapter(val context : Context, var listener:ButtonClick) :
 
     override fun onBindViewHolder(holder: MealDialogResultAdapter.ViewHolder, position: Int) {
 
-        val mealResult = resultDataSet[position]
+        val mealResult = resultDataSet.currentList[position]
 
         holder.resultTitle.text = mealResult.title
-        holder.resultCarbohydrate.text = "${mealResult.resultCarbohydrate}"
-        holder.resultProtein.text = mealResult.resultProtein.toString()
-        holder.resultFat.text = mealResult.resultFat.toString()
+        holder.resultCarbohydrate.text = mealResult.resultCarbohydrate.toInt().toString()
+        holder.resultProtein.text = mealResult.resultProtein.toInt().toString()
+        holder.resultFat.text = mealResult.resultFat.toInt().toString()
         holder.resultCountNum.text = mealResult.resultCountNum.toString()
 
     }
 
     override fun getItemCount(): Int {
-        return resultDataSet.size
+        return resultDataSet.currentList.size
     }
 
-    inner class ViewHolder(bindig: MealDialogResultItemBinding) : RecyclerView.ViewHolder(bindig.root){
+    inner class ViewHolder(binding: MealDialogResultItemBinding) : RecyclerView.ViewHolder(binding.root){
 
-        var resultTitle = bindig.rvDialogMenu
-        var resultCarbohydrate = bindig.rvDialogCarbohydrateNum
-        var resultProtein = bindig.rvDialogProteinNum
-        var resultFat = bindig.rvDialogFatNum
+        var resultTitle = binding.rvDialogMenu
+        var resultCarbohydrate = binding.rvDialogCarbohydrateNum
+        var resultProtein = binding.rvDialogProteinNum
+        var resultFat = binding.rvDialogFatNum
 
-        var resultDelete = bindig.rvDialogResultDelete
-        var btnPlus = bindig.rvDialogPlus
-        var btnMinus = bindig.rvDialogMinus
-        var resultCountNum = bindig.rvDialogCountNum
+        private var resultDelete = binding.rvDialogResultDelete
+        private var btnPlus = binding.rvDialogPlus
+        private var btnMinus = binding.rvDialogMinus
+        var resultCountNum = binding.rvDialogCountNum
 
 
         init {

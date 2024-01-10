@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:text="달걀 1개"
             android:textSize="13sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,12 +32,12 @@
             android:id="@+id/rv_dialog_carbohydrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:text="탄 : "
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/rv_dialog_menu"
-            app:layout_constraintStart_toEndOf="@+id/rv_dialog_menu"
-            app:layout_constraintTop_toTopOf="@+id/rv_dialog_menu" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/rv_dialog_menu"
+            app:layout_constraintTop_toBottomOf="@+id/rv_dialog_menu" />
 
         <TextView
             android:id="@+id/rv_dialog_carbohydrate_num"
@@ -104,7 +105,8 @@
         android:layout_height="wrap_content"
         android:text="개수 : "
         app:layout_constraintEnd_toStartOf="@+id/rv_dialog_count_num"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/rv_dialog_count_num"
@@ -113,7 +115,8 @@
         android:layout_marginEnd="10dp"
         android:text="1"
         app:layout_constraintBaseline_toBaselineOf="@+id/rv_dialog_count"
-        app:layout_constraintEnd_toStartOf="@+id/rv_dialog_plus" />
+        app:layout_constraintEnd_toStartOf="@+id/rv_dialog_plus"
+        android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rv_dialog_plus"
@@ -124,7 +127,8 @@
         android:text="+"
         app:layout_constraintBottom_toBottomOf="@+id/rv_dialog_minus"
         app:layout_constraintEnd_toStartOf="@+id/rv_dialog_minus"
-        app:layout_constraintTop_toTopOf="@+id/rv_dialog_minus" />
+        app:layout_constraintTop_toTopOf="@+id/rv_dialog_minus"
+        android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rv_dialog_minus"
@@ -134,6 +138,7 @@
         android:background="@drawable/meal_radius2"
         android:text="-"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
