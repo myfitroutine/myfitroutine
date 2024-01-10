@@ -1,15 +1,17 @@
 package com.bestteam.myfitroutine.Dialog
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,26 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bestteam.myfitroutine.Adapter.MealDialogResultAdapter
 import com.bestteam.myfitroutine.Adapter.MealDialogSearchAdapter
-import com.bestteam.myfitroutine.Contain
-import com.bestteam.myfitroutine.Model.MealData
 import com.bestteam.myfitroutine.Model.Meal_Adapter_Data
-import com.bestteam.myfitroutine.Model.TotalNumData
 import com.bestteam.myfitroutine.R
 import com.bestteam.myfitroutine.View.MealFragment
 import com.bestteam.myfitroutine.ViewModel.MealPlusViewModel
 import com.bestteam.myfitroutine.databinding.MealDialogBinding
-import com.bestteam.myfitroutine.retrofit.NetworkClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.GsonBuilder
-import kotlinx.coroutines.tasks.await
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -80,25 +71,10 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         binding.btnDialogCancel.setOnClickListener {
             btnPlus()
-            dismiss()
-
-            val mealFragment = MealFragment()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentFrame, mealFragment)
-            transaction.commit()
         }
 
         binding.mealDialogPlus.setOnClickListener {
-
             btnPlus()
-            dismiss()
-
-            val mealFragment = MealFragment()
-            val fragmentManager = requireActivity().supportFragmentManager
-            val transaction = fragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentFrame, mealFragment)
-            transaction.commit()
         }
 
         return binding.root
@@ -168,6 +144,10 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
                 resultSetupView()
                 totalCalories()
+                clickBreakfastChipCalorie()
+                clickLunchChipCalorie()
+                clickDinnerChipCalorie()
+                clickEtcChipCalorie()
             }
         }
     }
@@ -192,6 +172,9 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
                 Toast.makeText(mealContext, "검색어를 입력해 주세요.", Toast.LENGTH_SHORT).show()
                 binding.rvSearch.visibility = View.GONE
             }
+            //키보드 내리기
+            val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(binding.searchImage.windowToken, 0)
         }
     }
 
@@ -233,11 +216,9 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         viewModel.mealResultSetting()
         viewModel.resultData.observe(this) { resultData ->
-            this.resultData.clear()
             this.resultData.addAll(resultData)
             Log.e("resultData", "resultData : ${this.resultData}")
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.resultDataSet.submitList(resultData)
         }
     }
 
@@ -247,16 +228,12 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         resultAdapter = MealDialogResultAdapter(mealContext, this)
         binding.rvResult.adapter = resultAdapter
 
-        resultData.clear()
-        resultAdapter.resultDataSet.clear()
 
         viewModel.breakfastResultSetting()
         viewModel.resultData.observe(this) { resultData ->
-            this.resultData.clear()
             this.resultData.addAll(resultData)
             Log.e("resultData", "resultData : ${this.resultData}")
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.resultDataSet.submitList(resultData)
         }
 
     }
@@ -266,16 +243,11 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         resultAdapter = MealDialogResultAdapter(mealContext, this)
         binding.rvResult.adapter = resultAdapter
 
-        resultData.clear()
-        resultAdapter.resultDataSet.clear()
-
         viewModel.lunchResultSetting()
         viewModel.resultData.observe(this) { resultData ->
-            this.resultData.clear()
             this.resultData.addAll(resultData)
             Log.e("resultData", "resultData : ${this.resultData}")
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.resultDataSet.submitList(resultData)
         }
 
     }
@@ -287,11 +259,9 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         viewModel.dinnerResultSetting()
         viewModel.resultData.observe(this) { resultData ->
-            this.resultData.clear()
             this.resultData.addAll(resultData)
             Log.e("resultData", "resultData : ${this.resultData}")
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.resultDataSet.submitList(resultData)
         }
 
     }
@@ -301,15 +271,11 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         resultAdapter = MealDialogResultAdapter(mealContext, this)
         binding.rvResult.adapter = resultAdapter
 
-        resultData.clear()
-        resultAdapter.resultDataSet.clear()
-
         viewModel.etcResultSetting()
         viewModel.resultData.observe(this) { resultData ->
             this.resultData.addAll(resultData)
             Log.e("resultData", "resultData : ${this.resultData}")
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.resultDataSet.submitList(resultData)
         }
 
     }
@@ -358,6 +324,7 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         }
 
         viewModel.mealTotalCalorie()
+
     }
 
     private fun clickBreakfastChipCalorie() {
@@ -390,10 +357,17 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
                     val mealTypePro = it.getLong("proteinSum")
                     val mealTypeFat = it.getLong("fatSum")
 
-                    totalCal.text = mealTypeCal.toString()
-                    totalCar.text = mealTypeCar.toString()
-                    totalPro.text = mealTypePro.toString()
-                    totalFat.text = mealTypeFat.toString()
+                    if(mealTypeCal != null && mealTypeCar != null && mealTypePro != null && mealTypeFat != null) {
+                        totalCal.text = mealTypeCal.toString()
+                        totalCar.text = mealTypeCar.toString()
+                        totalPro.text = mealTypePro.toString()
+                        totalFat.text = mealTypeFat.toString()
+                    } else{
+                        totalCal.text = "0"
+                        totalCar.text = "0"
+                        totalPro.text = "0"
+                        totalFat.text = "0"
+                    }
                 }
             }
     }
@@ -429,10 +403,17 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
                     val mealTypePro = it.getLong("proteinSum")
                     val mealTypeFat = it.getLong("fatSum")
 
-                    totalCal.text = mealTypeCal.toString()
-                    totalCar.text = mealTypeCar.toString()
-                    totalPro.text = mealTypePro.toString()
-                    totalFat.text = mealTypeFat.toString()
+                    if(mealTypeCal != null && mealTypeCar != null && mealTypePro != null && mealTypeFat != null) {
+                        totalCal.text = mealTypeCal.toString()
+                        totalCar.text = mealTypeCar.toString()
+                        totalPro.text = mealTypePro.toString()
+                        totalFat.text = mealTypeFat.toString()
+                    } else{
+                        totalCal.text = "0"
+                        totalCar.text = "0"
+                        totalPro.text = "0"
+                        totalFat.text = "0"
+                    }
                 }
             }
     }
@@ -466,10 +447,17 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
                     val mealTypePro = it.getLong("proteinSum")
                     val mealTypeFat = it.getLong("fatSum")
 
-                    totalCal.text = mealTypeCal.toString()
-                    totalCar.text = mealTypeCar.toString()
-                    totalPro.text = mealTypePro.toString()
-                    totalFat.text = mealTypeFat.toString()
+                    if(mealTypeCal != null && mealTypeCar != null && mealTypePro != null && mealTypeFat != null) {
+                        totalCal.text = mealTypeCal.toString()
+                        totalCar.text = mealTypeCar.toString()
+                        totalPro.text = mealTypePro.toString()
+                        totalFat.text = mealTypeFat.toString()
+                    } else{
+                        totalCal.text = "0"
+                        totalCar.text = "0"
+                        totalPro.text = "0"
+                        totalFat.text = "0"
+                    }
                 }
             }
     }
@@ -503,10 +491,17 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
                         val mealTypePro = it.getLong("proteinSum")
                         val mealTypeFat = it.getLong("fatSum")
 
-                        totalCal.text = mealTypeCal.toString()
-                        totalCar.text = mealTypeCar.toString()
-                        totalPro.text = mealTypePro.toString()
-                        totalFat.text = mealTypeFat.toString()
+                        if(mealTypeCal != null && mealTypeCar != null && mealTypePro != null && mealTypeFat != null) {
+                            totalCal.text = mealTypeCal.toString()
+                            totalCar.text = mealTypeCar.toString()
+                            totalPro.text = mealTypePro.toString()
+                            totalFat.text = mealTypeFat.toString()
+                        } else{
+                            totalCal.text = "0"
+                            totalCar.text = "0"
+                            totalPro.text = "0"
+                            totalFat.text = "0"
+                        }
                     }
                 }
         }
@@ -532,13 +527,10 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
 
         viewModel.mealResultDelete(mealContext)
 
-        viewModel.resultData.observe(this) {
-            resultData.removeAt(position)
-            resultAdapter.resultDataSet = resultData
-            resultAdapter.notifyDataSetChanged()
+        viewModel.resultData.observe(this) { resultData ->
+            this.resultData.addAll(resultData)
+            resultAdapter.resultDataSet.submitList(this.resultData)
         }
-
-        totalCalories()
     }
 
     //+버튼 클릭
@@ -560,14 +552,13 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         }
 
         viewModel.mealResultPlus()
+        viewModel.mealResultSetting()
         viewModel.resultData.observe(this) { resultData ->
             this.resultData.clear()
             this.resultData.addAll(resultData)
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.resultDataSet.submitList(resultData)
 
         }
-        totalCalories()
     }
 
     //-버튼 클릭
@@ -589,16 +580,36 @@ class MealPlusDialog() : DialogFragment(), MealDialogResultAdapter.ButtonClick {
         }
 
         viewModel.mealResultMinus()
+        viewModel.mealResultSetting()
         viewModel.resultData.observe(this) { resultData ->
             this.resultData.clear()
             this.resultData.addAll(resultData)
-            resultAdapter.resultDataSet = this.resultData
-            resultAdapter.notifyDataSetChanged()
-
+            resultAdapter.resultDataSet.submitList(resultData)
         }
     }
 
     fun btnPlus() {
         viewModel.btnComplete(mealContext)
+
+        val builder = AlertDialog.Builder(mealContext)
+        val progress = layoutInflater.inflate(R.layout.progressbar, null)
+        builder.setView(progress)
+        builder.setCancelable(false)
+        val dialog = builder.create()
+        dialog.show()
+
+        val handler = Handler()
+        handler.postDelayed({
+            if (dialog.isShowing){
+                dialog.dismiss()
+                dismiss()
+
+                val mealFragment = MealFragment()
+                val fragmentManager = requireActivity().supportFragmentManager
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.fragmentFrame, mealFragment)
+                transaction.commit()
+            }
+        },2000)
     }
 }

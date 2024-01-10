@@ -1,17 +1,29 @@
 package com.bestteam.myfitroutine.View
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.health.connect.datatypes.units.Length
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bestteam.myfitroutine.Adapter.MealDailyAdapter
 import com.bestteam.myfitroutine.Dialog.MealPlusDialog
 import com.bestteam.myfitroutine.Model.TotalNumData
 import com.bestteam.myfitroutine.databinding.FragmentMealBinding
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -61,6 +73,8 @@ class MealFragment : Fragment() {
         getBeforeOneDayMeal()
         getBeforeTwoDayMeal()
 
+        setCycleChart()
+
         return binding.root
     }
 
@@ -69,6 +83,7 @@ class MealFragment : Fragment() {
 
 
     }
+    @SuppressLint("SetTextI18n")
     private fun getTodayMeal(){
         todayMealData.clear()
 
@@ -100,10 +115,10 @@ class MealFragment : Fragment() {
             .addOnSuccessListener {
                 val cal = it.getLong("calorieSum")
                 binding.rvTodayBreakfastCalorieNum.text = cal.toString()
-                if(cal != null) {
-                    binding.constraintDailyBreakfast.visibility = View.VISIBLE
+                if(cal == null || cal == 0.toLong()) {
+                    binding.constraintDailyBreakfast.visibility = View.GONE
                 }
-                else binding.constraintDailyBreakfast.visibility = View.GONE
+                else binding.constraintDailyBreakfast.visibility = View.VISIBLE
             }
 
 
@@ -126,10 +141,10 @@ class MealFragment : Fragment() {
             .addOnSuccessListener {
                 val cal = it.getLong("calorieSum")
                 binding.rvTodayLunchCalorieNum.text = cal.toString()
-                if(cal != null) {
-                    binding.constraintDailyLunch.visibility = View.VISIBLE
+                if(cal == null || cal == 0.toLong()) {
+                    binding.constraintDailyLunch.visibility = View.GONE
                 }
-                else binding.constraintDailyLunch.visibility = View.GONE
+                else binding.constraintDailyLunch.visibility = View.VISIBLE
             }
 
         //저녁
@@ -151,10 +166,10 @@ class MealFragment : Fragment() {
             .addOnSuccessListener {
                 val cal = it.getLong("calorieSum")
                 binding.rvTodayDinnerCalorieNum.text = cal.toString()
-                if(cal != null) {
-                    binding.constraintDailyDinner.visibility = View.VISIBLE
+                if(cal == null || cal == 0.toLong()) {
+                    binding.constraintDailyDinner.visibility = View.GONE
                 }
-                else binding.constraintDailyDinner.visibility = View.GONE
+                else binding.constraintDailyDinner.visibility = View.VISIBLE
             }
 
         //그외
@@ -177,10 +192,10 @@ class MealFragment : Fragment() {
             .addOnSuccessListener {
                 val cal = it.getLong("calorieSum")
                 binding.rvTodayEtcCalorieNum.text = cal.toString()
-                if(cal != null) {
-                    binding.constraintDailyEtc.visibility = View.VISIBLE
+                if(cal == null || cal == 0.toLong()) {
+                    binding.constraintDailyEtc.visibility = View.GONE
                 }
-                else binding.constraintDailyEtc.visibility = View.GONE
+                else binding.constraintDailyEtc.visibility = View.VISIBLE
             }
 
         totalCalQuery.document("dailyNum").get()
@@ -194,16 +209,16 @@ class MealFragment : Fragment() {
 
                 if (totalCal != null){
                     binding.totalCalorieNum.text = decimalFormat.format(totalCal)
-                } else binding.totalCalorieNum.text = "0"
+                } else binding.totalCalorieNum.text = "0 Kcal"
                 if (totalCar != null){
-                    binding.mealGraph1.text = decimalFormat.format(totalCar)
-                } else binding.mealGraph1.text = "0"
+                    binding.mealGraph1.text = decimalFormat.format(totalCar)+" Kcal"
+                } else binding.mealGraph1.text = "0 Kcal"
                 if (totalPro != null){
-                    binding.mealGraph2.text = decimalFormat.format(totalPro)
-                } else binding.mealGraph2.text = "0"
+                    binding.mealGraph2.text = decimalFormat.format(totalPro)+" Kcal"
+                } else binding.mealGraph2.text = "0 Kcal"
                 if (totalFat != null){
-                    binding.mealGraph3.text = decimalFormat.format(totalFat)
-                } else binding.mealGraph3.text = "0"
+                    binding.mealGraph3.text = decimalFormat.format(totalFat)+" Kcal"
+                } else binding.mealGraph3.text = "0 Kcal"
 
             }
     }
@@ -328,6 +343,88 @@ class MealFragment : Fragment() {
                     todayMealData.add(resultFormat)
                     c += docId
                     binding.rvDinner.text = c.dropLast(3)
+                }
+            }
+    }
+
+
+
+    private fun setCycleChart(){
+        binding.mealChart.setUsePercentValues(true)
+
+        auth = Firebase.auth
+        val uid = auth?.currentUser?.uid
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).format(currentDate)
+
+        val query = db.collection("$uid").document(dateFormat).collection("totalNum").document("dailyNum")
+
+        query.get()
+            .addOnSuccessListener {
+
+                if (it.exists()){
+
+                    val dataSet = it.data
+
+                    val cal = dataSet?.get("dailyCalorieSum") as Long
+                    val car = dataSet?.get("dailyCarbohydrateSum") as Long
+                    val pro = dataSet?.get("dailyProteinSum") as Long
+                    val fat = dataSet?.get("dailyFateSum") as Long
+
+                    if (cal.toInt() != 0){
+
+                        binding.mealChart.visibility = View.VISIBLE
+
+                        val entries = ArrayList<PieEntry>()
+                        if (car.toFloat() != 0f) {
+                            entries.add(PieEntry(car.toFloat(), "탄수화물"))
+                        }
+                        if(pro.toFloat() != 0f) {
+                            entries.add(PieEntry(pro.toFloat(), "단백질"))
+                        }
+                        if (fat.toFloat() != 0f) {
+                            entries.add(PieEntry(fat.toFloat(), "지방"))
+                        }
+
+
+                        val colorItem = ArrayList<Int>()
+                        for (c in ColorTemplate.VORDIPLOM_COLORS) colorItem.add(c)
+                        for (c in ColorTemplate.JOYFUL_COLORS) colorItem.add(c)
+                        for (c in ColorTemplate.COLORFUL_COLORS) colorItem.add(c)
+                        colorItem.add(ColorTemplate.getHoloBlue())
+
+                        val pieDataSet = PieDataSet(entries,"")
+                        pieDataSet.apply {
+                            colors = colorItem
+                            valueTextColor = Color.BLACK
+                            valueTextSize = 18f
+                            valueFormatter = PercentFormatter(binding.mealChart) // 숫자뒤에 % 넣기
+                        }
+
+                        val pieData = PieData(pieDataSet)
+                        binding.mealChart.apply {
+                            data = pieData
+                            description.isEnabled = false
+                            isRotationEnabled = false
+                            centerText = "칼로리"
+                            setEntryLabelColor(Color.BLACK)
+                            setCenterTextSize(20f)
+                            animateY(1400, Easing.EaseInOutQuad)
+                            animate()
+                        }
+
+                        binding.mealChart.legend.apply {
+                            verticalAlignment = Legend.LegendVerticalAlignment.TOP
+                            horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+                            orientation = Legend.LegendOrientation.VERTICAL
+                            setDrawInside(false)
+                            xEntrySpace = 10f
+                            yEntrySpace = 10f
+                            textSize = 12f
+                        }
+
+                    }
                 }
             }
     }
